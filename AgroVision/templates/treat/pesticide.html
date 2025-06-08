@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroVision - Treatment Recommendation</title>
+    <style>
+        :root {
+            --primary-green: #0B5B2E;
+            --light-green: #90EE90;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background: linear-gradient(to right, var(--light-green), #ffffff);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-section img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-green);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .auth-buttons button {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .signup-btn {
+            background: var(--primary-green);
+            border: none;
+            color: white;
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .treatment-header {
+            color: var(--primary-green);
+            margin-bottom: 2rem;
+        }
+
+        .treatment-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .disease-image {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .disease-image img {
+            width: 100%;
+            height: auto;
+        }
+
+        .disease-name {
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .treatment-plan {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .treatment-plan h2 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+        .treatment-plan ul {
+            list-style-type: none;
+            padding-left: 1rem;
+        }
+        .treatment-plan li {
+            margin-bottom: 0.5rem;
+        }
+
+        .download-btn {
+            background: var(--primary-green);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 2rem auto;
+            font-size: 1rem;
+        }
+
+        .download-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo-section">
+            <img src="{% static 'images/logo.png' %}" alt="AgroVision Logo">
+            <h1>AgroVision</h1>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'disease_input' %}">Home</a>
+            <a href="#">Community</a>
+            <a href="#">About us</a>
+            <a href="#">Contact us</a>
+        </div>
+        
+    </nav>
+
+    <main class="main-content">
+<h1 class="treatment-header">Treatment Plan for: {{ treatment_plan.pest_name }}</h1>
+
+        
+        <div class="treatment-container">
+            <div class="disease-info">
+                <div class="disease-image">
+                    <img src="{{ disease_image }}" alt="{{ treatment_plan.disease_name }}">
+                </div>
+                <h2 class="disease-name">{{ treatment_plan.disease_name }}</h2>
+            </div>
+
+            <div class="treatment-plan">
+                <h2>🔍 Attack Reasons:</h2>
+                <ul>
+                    {% for reason in treatment_plan.attack_reasons %}
+                        <li>✅ {{ reason }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>🚜 Prevention Tips:</h2>
+                <ul>
+                    {% for tip in treatment_plan.prevention_tips %}
+                        <li>✔ {{ tip }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>🌿 Natural Remedies:</h2>
+                <ul>
+                    {% for remedy in treatment_plan.natural_remedies %}
+                        <li>🌱 {{ remedy }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>🧪 Chemical Control:</h2>
+                <ul>
+                    {% for control in treatment_plan.chemical_control %}
+                        <li>⚗ {{ control }}</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+
+        <button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+    </main>
+
+    <script>
+        async function downloadPDF() {
+            try {
+                const response = await fetch('/download-pdf/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        treatment_plan: {{ treatment_plan|safe }},
+                        disease_image: '{{ disease_image }}'
+                    })
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = '{{ treatment_plan.disease_name }}_treatment.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error downloading PDF:', errorData.error);
+                    alert('Error downloading PDF: ' + errorData.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while downloading the PDF. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

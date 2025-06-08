@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Agricultural Schemes - Agriculture Vigilance System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Agricultural Schemes</h2>
+    
+    <!-- Scheme Categories -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Schemes</h5>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" value="" id="cropInsurance" checked>
+                        <label class="form-check-label" for="cropInsurance">
+                            Crop Insurance
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" value="" id="subsidy" checked>
+                        <label class="form-check-label" for="subsidy">
+                            Subsidies
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" value="" id="loan" checked>
+                        <label class="form-check-label" for="loan">
+                            Loans
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" value="" id="training" checked>
+                        <label class="form-check-label" for="training">
+                            Training Programs
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-9">
+            <!-- Scheme Cards -->
+            <div class="row">
+                <!-- PM-KISAN -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">PM-KISAN</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Income Support Scheme</h6>
+                            <p class="card-text">Direct income support of ₹6,000 per year to all farmer families across the country.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle text-success"></i> ₹6,000 per year</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Paid in 3 installments</li>
+                                <li><i class="fas fa-check-circle text-success"></i> All farmers eligible</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PMFBY -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">PMFBY</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Crop Insurance Scheme</h6>
+                            <p class="card-text">Comprehensive crop insurance scheme covering all crops and all farmers.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle text-success"></i> Low premium rates</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Covers all crops</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Quick claim settlement</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soil Health Card -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Soil Health Card</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Soil Testing Scheme</h6>
+                            <p class="card-text">Free soil testing and recommendations for farmers every 3 years.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle text-success"></i> Free soil testing</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Nutrient recommendations</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Valid for 3 years</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KCC -->
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Kisan Credit Card</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Credit Scheme</h6>
+                            <p class="card-text">Simplified credit access for farmers with flexible repayment options.</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check-circle text-success"></i> Low interest rates</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Flexible repayment</li>
+                                <li><i class="fas fa-check-circle text-success"></i> Insurance coverage</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add filter functionality
+    const checkboxes = document.querySelectorAll('.form-check-input');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Add your filtering logic here
+            console.log('Filter changed:', this.id);
+        });
+    });
+});
+</script>
+{% endblock %} 

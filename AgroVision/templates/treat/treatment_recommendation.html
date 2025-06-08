@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* Only keeping minimal custom styles that can't be achieved with Tailwind */
+    :root {
+        --primary-green: #0B5B2E;
+        --light-green: #90EE90;
+    }
+
+    .auth-buttons button:hover {
+        opacity: 0.9;
+    }
+
+    /* Loading spinner styles */
+    .loading-spinner {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #48bb78;
+        animation: spin 1s ease-in-out infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1000;
+    }
+
+    .loading-text {
+        margin-top: 10px;
+        color: #48bb78;
+        font-weight: 500;
+    }
+
+    /* Make sure content containers are relative for loading overlay */
+    .content-container {
+        position: relative;
+        min-height: 200px;
+    }
+
+    /* Download button styles */
+    .download-section {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .download-btn {
+        background-color: #48bb78;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .download-btn:hover {
+        background-color: #38a169;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<main class="container mx-auto px-4 py-8 max-w-7xl">
+    <h1 class="text-3xl md:text-4xl text-primary-green font-bold mb-8">Treatment Plan for: {{ treatment_plan.disease_name }}</h1>
+    
+    <!-- Main content grid - switches to column on mobile -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        <!-- Disease info section - takes full width on mobile, 4 columns on desktop -->
+        <div class="lg:col-span-4 content-container">
+            <div class="bg-white rounded-lg overflow-hidden shadow-md">
+                <img src="{{ disease_image }}" 
+                     alt="{{ treatment_plan.disease_name }}" 
+                     class="w-full h-auto object-cover">
+                <h2 class="text-xl text-primary-green font-semibold p-4">
+                    {{ treatment_plan.disease_name }}
+                </h2>
+            </div>
+        </div>
+
+        <!-- Treatment plan section - takes full width on mobile, 8 columns on desktop -->
+        <div class="lg:col-span-8 content-container">
+            <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                <!-- Symptoms -->
+                <div class="mb-6">
+                    <h2 class="text-xl text-primary-green font-semibold mb-4">🔍 Symptoms:</h2>
+                    <ul class="space-y-2">
+                        {% for symptom in treatment_plan.symptoms %}
+                            <li class="flex items-start gap-2">
+                                <span class="text-green-600">✅</span>
+                                <span>{{ symptom }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Causes -->
+                <div class="mb-6">
+                    <h2 class="text-xl text-primary-green font-semibold mb-4">⚠️ Causes:</h2>
+                    <ul class="space-y-2 list-disc list-inside">
+                        {% for cause in treatment_plan.causes %}
+                            <li>{{ cause }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Treatment Steps -->
+                <div class="mb-6">
+                    <h2 class="text-xl text-primary-green font-semibold mb-4">🛠 Treatment Steps:</h2>
+                    <ol class="space-y-2 list-decimal list-inside">
+                        {% for step in treatment_plan.treatment_steps %}
+                            <li>{{ step }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+
+                <!-- Prevention Tips -->
+                <div class="mb-6">
+                    <h2 class="text-xl text-primary-green font-semibold mb-4">🚜 Prevention Tips:</h2>
+                    <ul class="space-y-2">
+                        {% for tip in treatment_plan.prevention_tips %}
+                            <li class="flex items-start gap-2">
+                                <span class="text-green-600">✔</span>
+                                <span>{{ tip }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download button -->
+    <div class="download-section">
+        <button class="download-btn" onclick="downloadPDF()">
+            Download Detailed Report 📄
+        </button>
+    </div>
+</main>
+
+<script>
+    function showLoading(message = 'Generating AI recommendations...') {
+        const containers = document.querySelectorAll('.content-container');
+        containers.forEach(container => {
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'loading-overlay';
+            loadingOverlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <div class="loading-text">${message}</div>
+            `;
+            container.appendChild(loadingOverlay);
+        });
+    }
+
+    function hideLoading() {
+        const loadingOverlays = document.querySelectorAll('.loading-overlay');
+        loadingOverlays.forEach(overlay => overlay.remove());
+    }
+
+    async function downloadPDF() {
+        showLoading('Preparing your PDF report...');
+        try {
+            const response = await fetch('/treat/download-pdf/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    treatment_plan: {{ treatment_plan|safe }},
+                    disease_image: '{{ disease_image }}'
+                })
+            });
+            
+            hideLoading();
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '{{ treatment_plan.disease_name }}_treatment.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } else {
+                const errorData = await response.json();
+                console.error('Error downloading PDF:', errorData.error);
+                alert('Error downloading PDF: ' + errorData.error);
+            }
+        } catch (error) {
+            hideLoading();
+            console.error('Error:', error);
+            alert('An error occurred while downloading the PDF. Please try again.');
+        }
+    }
+
+    // Show initial loading state when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!{{ treatment_plan|safe }}) {
+            showLoading();
+        }
+    });
+</script>
+{% endblock %}

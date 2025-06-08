@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Location & Weather - Agriculture Vigilance System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Location Information -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ translations.get(g.lang, {}).get('current_location', 'Current Location') }}</h5>
+                    {% if location_error %}
+                        <div class="alert alert-danger">{{ location_error }}</div>
+                    {% else %}
+                        <div class="location-info">
+                            <p><strong>City:</strong> {{ location.city }}</p>
+                            <p><strong>Country:</strong> {{ location.country }}</p>
+                            <p><strong>Coordinates:</strong> {{ location.latitude }}, {{ location.longitude }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Information -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ translations.get(g.lang, {}).get('weather_info', 'Weather Information') }}</h5>
+                    {% if weather_error %}
+                        <div class="alert alert-danger">{{ weather_error }}</div>
+                    {% elif weather_data %}
+                        <div class="weather-info">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather icon">
+                                <h3 class="mb-0 ms-3">{{ weather_data.temp }}°C</h3>
+                            </div>
+                            <p><strong>Description:</strong> {{ weather_data.description }}</p>
+                            <p><strong>Humidity:</strong> {{ weather_data.humidity }}%</p>
+                            <p><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} m/s</p>
+                            <p><strong>Sunrise:</strong> {{ weather_data.sunrise }}</p>
+                            <p><strong>Sunset:</strong> {{ weather_data.sunset }}</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">{{ translations.get(g.lang, {}).get('loading_weather', 'Loading weather...') }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Agricultural Advice -->
+    {% if groq_advice %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Agricultural Advice</h5>
+                    <div class="advice-content">
+                        {{ groq_advice }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Refresh weather data every 30 minutes
+    setInterval(function() {
+        window.location.reload();
+    }, 30 * 60 * 1000);
+});
+</script>
+{% endblock %} 

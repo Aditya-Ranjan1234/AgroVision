@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Video Monitoring - Agriculture Vigilance System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Video Monitoring</h2>
+    
+    <div class="row">
+        <!-- Camera Feeds -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Camera Feeds</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for camera_id in range(4) %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="card-title mb-0">Camera {{ camera_id + 1 }}</h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <img src="{{ url_for('video_feed', camera_id=camera_id) }}" 
+                                         class="img-fluid" 
+                                         alt="Camera {{ camera_id + 1 }} Feed">
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alerts Panel -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Alerts</h5>
+                </div>
+                <div class="card-body">
+                    <div id="alerts-container" class="list-group">
+                        {% for alert in alerts %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ alert.type }}</h6>
+                                <small>{{ alert.timestamp }}</small>
+                            </div>
+                            <p class="mb-1">{{ alert.message }}</p>
+                            <small>Camera: {{ alert.camera_id }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Socket.IO for real-time alerts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var socket = io();
+        
+        socket.on('new_alert', function(alert) {
+            var alertsContainer = document.getElementById('alerts-container');
+            var alertElement = document.createElement('div');
+            alertElement.className = 'list-group-item list-group-item-action';
+            alertElement.innerHTML = `
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">${alert.type}</h6>
+                    <small>${alert.timestamp}</small>
+                </div>
+                <p class="mb-1">${alert.message}</p>
+                <small>Camera: ${alert.camera_id}</small>
+            `;
+            
+            alertsContainer.insertBefore(alertElement, alertsContainer.firstChild);
+            
+            // Keep only the last 10 alerts
+            while (alertsContainer.children.length > 10) {
+                alertsContainer.removeChild(alertsContainer.lastChild);
+            }
+        });
+    });
+</script>
+{% endblock %} 

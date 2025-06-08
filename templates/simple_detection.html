@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Video Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .video-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .video-feed {
+            width: 100%;
+            height: auto;
+            background: #000;
+        }
+        .detection-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .card {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <h1 class="text-center mb-4">Farm Surveillance</h1>
+        
+        <div class="row" id="video-container">
+            <!-- Video feeds will be added here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+    <script>
+        // Configuration
+        const VIDEO_SOURCES = [
+            { id: 'cow', name: 'Cow Pasture', src: '/videos/cow.mp4' },
+            { id: 'sheep', name: 'Sheep Field', src: '/videos/sheep.mp4' },
+            { id: 'goat', name: 'Goat Pen', src: '/videos/goat.mp4' },
+            { id: 'pig', name: 'Pig Pen', src: '/videos/pig.mp4' }
+        ];
+
+        // Global variables
+        let model;
+        const detections = {};
+
+        // Initialize the application
+        async function init() {
+            // Create video elements
+            createVideoElements();
+            
+            // Load the COCO-SSD model
+            console.log('Loading model...');
+            model = await cocoSsd.load();
+            console.log('Model loaded');
+            
+            // Start detection for each video
+            VIDEO_SOURCES.forEach(video => {
+                startDetection(video.id);
+            });
+        }
+
+        // Create video elements
+        function createVideoElements() {
+            const container = document.getElementById('video-container');
+            
+            VIDEO_SOURCES.forEach(video => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-3 mb-4';
+                
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">${video.name}</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="video-container">
+                                <video id="${video.id}" class="video-feed" autoplay muted loop>
+                                    <source src="${video.src}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <canvas id="${video.id}-canvas" class="detection-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(col);
+            });
+        }
+
+        // Start detection for a video
+        async function startDetection(videoId) {
+            const video = document.getElementById(videoId);
+            const canvas = document.getElementById(`${videoId}-canvas`);
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size to match video
+            function updateCanvasSize() {
+                canvas.width = video.offsetWidth;
+                canvas.height = video.offsetHeight;
+            }
+            
+            // Initial size
+            updateCanvasSize();
+            
+            // Update on window resize
+            window.addEventListener('resize', updateCanvasSize);
+            
+            // Start detection loop
+            function detect() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    // Run detection
+                    model.detect(video).then(predictions => {
+                        // Clear previous drawings
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw new detections
+                        drawDetections(predictions, ctx);
+                        
+                        // Store detections for this video
+                        detections[videoId] = predictions;
+                    });
+                }
+                
+                // Continue the loop
+                requestAnimationFrame(detect);
+            }
+            
+            // Start detection
+            detect();
+        }
+
+        // Draw detection boxes
+        function drawDetections(predictions, ctx) {
+            // Only show high confidence detections
+            const filteredPredictions = predictions.filter(p => p.score > 0.5);
+            
+            filteredPredictions.forEach(prediction => {
+                // Only show certain classes
+                const allowedClasses = ['person', 'dog', 'cat', 'horse', 'sheep', 'cow', 'bear'];
+                if (!allowedClasses.includes(prediction.class)) return;
+                
+                // Draw bounding box
+                const [x, y, width, height] = prediction.bbox;
+                const color = prediction.class === 'person' ? 'red' : 'green';
+                
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, width, height);
+                
+                // Draw label background
+                ctx.fillStyle = color;
+                const text = `${prediction.class} ${(prediction.score * 100).toFixed(1)}%`;
+                const textWidth = ctx.measureText(text).width;
+                ctx.fillRect(x, y, textWidth + 10, 20);
+                
+                // Draw text
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.fillText(text, x + 5, y + 15);
+            });
+        }
+
+        // Start the application when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

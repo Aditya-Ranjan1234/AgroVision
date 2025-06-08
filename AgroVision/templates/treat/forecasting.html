@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast and Growth Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #d4f1d4 0%, #a8dba8 100%);
+            color: #2d3436;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        h1 {
+            color: #2d3436;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .recommendations {
+            background: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 1px solid #c8e6c9;
+        }
+        .recommendations h2 {
+            color: #2d3436;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .recommendation-points {
+            background: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #c8e6c9;
+        }
+
+
+        .weather-card h2 {
+            color: #2d3436;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .forecast-list {
+            list-style: none;
+            padding: 0;
+        }
+        .forecast-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .recommendations {
+            background: #e8f5e9;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 1px solid #c8e6c9;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .recommendation-points {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .bullet {
+            color: #2e7d32;
+            font-size: 1.2rem;
+            line-height: 1.4;
+        }
+
+
+        .recommendations h2 {
+            color: #2d3436;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .error {
+            background: #ffe6e6;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Forecast & Growth Recommendations</h1>
+
+    
+        {% if error %}
+            <div class="error">
+                <p>Error: {{ error }}</p>
+            </div>
+        {% endif %}
+
+        {% if weather_data %}
+            <div class="weather-section">
+                <div class="weather-card">
+                    <h2>Current Weather</h2>
+                    <p>🌡️ Temperature: {{ weather_data.current.temperature }} °C</p>
+                    <p>💧 Humidity: {{ weather_data.current.humidity }} %</p>
+                    <p>🌱 Soil Moisture: {{ weather_data.current.soil_moisture }} %</p>
+                    <p>🧪 Soil pH: {{ weather_data.current.soil_ph }}</p>
+                </div>
+                
+
+                <div class="weather-card">
+                    <h2>8-Day Forecast</h2>
+                    <ul class="forecast-list">
+                        {% for day in weather_data.forecast %}
+                            <li class="forecast-item">
+                                <span>📅 {{ day.date }}</span>
+                                <span>🌡️ {{ day.temperature }} °C</span>
+                                <span>💧 {{ day.humidity }} %</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h2>🌿 Growth Recommendations</h2>
+                <div class="recommendations-content">
+                    <p>{{ growth_recommendations }}</p>
+                </div>
+            </div>
+        {% else %}
+            <div class="weather-card">
+                <p>No weather data available.</p>
+            </div>
+        {% endif %}
+
+    </div>
+</body>
+</html>

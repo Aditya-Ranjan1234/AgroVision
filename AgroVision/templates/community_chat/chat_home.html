@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Groups - AgroVision Community{% endblock %}
+
+{% block extra_css %}
+<script async type='module' src='https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js'></script>
+<zapier-interfaces-chatbot-embed is-popup='true' chatbot-id='cm7p5u8a0004m13sr0e33evpi'></zapier-interfaces-chatbot-embed>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Your Groups</h2>
+        <div class="groups-list mb-4">
+            {% if user_groups %}
+                {% for group in user_groups %}
+                    <div class="group-item">
+                        <a href="{% url 'community_chat:group_chat' group.id %}" class="text-decoration-none">
+                            <h4 class="mb-1">{{ group.name }}</h4>
+                            <p class="text-muted mb-0">{{ group.description|truncatechars:100 }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">You haven't joined any groups yet.</p>
+            {% endif %}
+        </div>
+
+        <h2>Public Groups</h2>
+        <div class="groups-list">
+            {% if public_groups %}
+                {% for group in public_groups %}
+                    <div class="group-item">
+                        <h4 class="mb-1">{{ group.name }}</h4>
+                        <p class="text-muted mb-2">{{ group.description|truncatechars:100 }}</p>
+                        <form action="{% url 'community_chat:join_group' group.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Join Group</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No public groups available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Create New Group</h3>
+                <p class="card-text">Start a new discussion group about farming practices, crop diseases, or any agricultural topic.</p>
+                <a href="{% url 'community_chat:create_group' %}" class="btn btn-success">Create Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

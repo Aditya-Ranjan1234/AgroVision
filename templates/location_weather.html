@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Location & Weather - Agriculture Vigilance System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Location & Weather</h2>
+    
+    <!-- Location and Weather -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Your Location & Local Weather</h5>
+                </div>
+                <div class="card-body">
+                    {% if location %}
+                        <p><strong>Location:</strong> {{ location.city }}, {{ location.country }}</p>
+                        <p><strong>Coordinates:</strong> {{ location.latitude }}, {{ location.longitude }}</p>
+                        <div id="weather-info">
+                            {% if weather_data %}
+                                <p><strong>Temperature:</strong> {{ weather_data.temp }}°C</p>
+                                <p><strong>Condition:</strong> {{ weather_data.description | capitalize }}</p>
+                                <p><strong>Humidity:</strong> {{ weather_data.humidity }}%</p>
+                                <p><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} m/s</p>
+                                <p><strong>Sunrise:</strong> {{ weather_data.sunrise }}</p>
+                                <p><strong>Sunset:</strong> {{ weather_data.sunset }}</p>
+                                <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Weather Icon">
+                            {% else %}
+                                <p class="text-muted">Could not fetch weather data.</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Farming Suggestions -->
+                        {% if groq_advice %}
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h5>Farming Suggestions from AI:</h5>
+                            <p>{{ groq_advice }}</p>
+                        </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>Location not available. Please enable location services.</p>
+                        <div id="weather-info">
+                            <p class="text-muted">Loading weather information...</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const socket = io();
+        
+        // Handle weather updates (for real-time updates after initial load if needed)
+        socket.on('weather_update', function(data) {
+            const weatherInfo = document.getElementById('weather-info');
+            weatherInfo.innerHTML = `
+                <p><strong>Temperature:</strong> ${data.temperature}°C</p>
+                <p><strong>Condition:</strong> ${data.condition}</p>
+                <p><strong>Humidity:</strong> ${data.humidity}%</p>
+            `;
+        });
+    });
+</script>
+{% endblock %} 

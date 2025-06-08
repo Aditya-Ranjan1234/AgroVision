@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <style>
+        tbody tr:hover { background-color: #255d16e6 !important; cursor: pointer; }
+        .btn-primary:hover { background-color: rgb(7, 111, 7) !important; color: white !important; }
+        .govt-logo { position: absolute; top: 10px; left: 10px; width: 100px; }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-center mt-3">
+    <img src="https://www.india.gov.in/sites/upload_files/npi/files/national-symbols_0.png" width="80px" class="me-3" alt="Indian Government Emblem">
+</div>
+
+<div class="container mt-4">
+    <h2 id="title" class="text-center">
+        Government Subsidies & Schemes for Farmers | 
+        किसानों के लिए सरकारी सब्सिडी और योजनाएँ |  
+        விவசாயிகளுக்கான அரசு மானியங்கள் மற்றும் திட்டங்கள் |  
+        రైతుల కోసం ప్రభుత్వ రాయితీలు మరియు పథకాలు
+    </h2>
+
+    <div class="d-flex justify-content-end">
+        <label for="language" class="me-2"><b>Language:</b></label>
+        <select id="language" class="form-select w-auto">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+        </select>
+    </div>
+
+    <div class="alert alert-info mt-3" id="description">
+        Welcome to the Government Subsidies & Schemes Portal, where farmers can access the latest benefits, financial aid, and agricultural schemes provided by the central and state governments. Our goal is to help you find the right support to enhance productivity and ensure a sustainable future in farming.
+    </div>
+
+    <input type="text" id="search" class="form-control mt-3" placeholder="Search scheme by name, category, or state">
+    
+
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th id="th-name">Scheme Name</th>
+                <th id="th-category">Category</th>
+                <th id="th-state">State</th>
+                <th id="th-purpose">Purpose</th>
+                <th id="th-apply">Apply</th>
+            </tr>
+        </thead>
+        <tbody id="scheme-list"></tbody>
+    </table>
+
+    <div class="d-flex justify-content-between">
+        <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+        <button id="next-btn" class="btn btn-secondary">Next</button>
+    </div>
+</div>
+
+<script>
+    
+document.getElementById("search").addEventListener("input", (event) => {
+    const query = event.target.value.toLowerCase();
+    filterSchemes(query);
+});
+
+function filterSchemes(query) {
+    const schemeList = document.getElementById("scheme-list");
+    schemeList.innerHTML = "";
+    
+    const filteredSchemes = schemes.filter(scheme =>
+        scheme.name[currentLang].toLowerCase().includes(query) ||
+        scheme.category[currentLang].toLowerCase().includes(query) ||
+        scheme.state[currentLang].toLowerCase().includes(query) ||
+        scheme.purpose[currentLang].toLowerCase().includes(query)
+    );
+
+    if (filteredSchemes.length === 0) {
+        schemeList.innerHTML = `<tr><td colspan="5" class="text-center">No matching schemes found</td></tr>`;
+    } else {
+        filteredSchemes.forEach(scheme => {
+            schemeList.innerHTML += `
+                <tr>
+                    <td>${scheme.name[currentLang]}</td>
+                    <td>${scheme.category[currentLang]}</td>
+                    <td>${scheme.state[currentLang]}</td>
+                    <td>${scheme.purpose[currentLang]}</td>
+                    <td><a href="${scheme.link}" target="_blank" class="btn btn-primary">${translations[currentLang].applyNow}</a></td>
+                </tr>`;
+        });
+    }
+}
+
+
+    const translations = {
+        en: { title: "Government Subsidies & Schemes for Farmers", description: "This portal provides farmers with the latest government subsidies and schemes across India.", searchPlaceholder: "Search scheme by name, category, or state", thName: "Scheme Name", thCategory: "Category", thState: "State", thPurpose: "Purpose", thApply: "Apply", applyNow: "Apply Now" },
+        hi: { title: "किसानों के लिए सरकारी सब्सिडी और योजनाएँ", description: "यह पोर्टल किसानों को नवीनतम सरकारी सब्सिडी और योजनाओं की जानकारी प्रदान करता है।", searchPlaceholder: "योजना का नाम, श्रेणी या राज्य खोजें", thName: "योजना का नाम", thCategory: "श्रेणी", thState: "राज्य", thPurpose: "उद्देश्य", thApply: "आवेदन करें", applyNow: "अभी आवेदन करें" },
+        ta: { title: "விவசாயிகளுக்கான அரசு மானியங்கள் மற்றும் திட்டங்கள்", description: "இந்த தளத்தில் விவசாயிகளுக்கான புதிய அரசு மானியங்கள் மற்றும் திட்டங்களை வழங்குகிறது.", searchPlaceholder: "திட்ட பெயர், வகை அல்லது மாநிலம் தேடுங்கள்", thName: "திட்டத்தின் பெயர்", thCategory: "வகை", thState: "மாநிலம்", thPurpose: "நோக்கம்", thApply: "விண்ணப்பிக்க", applyNow: "இப்போதே விண்ணப்பிக்க" },
+        te: { title: "రైతుల కోసం ప్రభుత్వ రాయితీలు మరియు పథకాలు", description: "ఈ పోర్టల్ భారతదేశం అంతటా రైతులకు అందుబాటులో ఉన్న తాజా ప్రభుత్వ రాయితీలు మరియు పథకాల గురించి సమాచారాన్ని అందిస్తుంది.", searchPlaceholder: "పథకం పేరు, వర్గం లేదా రాష్ట్రం కోసం వెతకండి", thName: "పథకం పేరు", thCategory: "వర్గం", thState: "రాష్ట్రం", thPurpose: "పురుషోత్తమ", thApply: "దరఖాస్తు చేయండి", applyNow: "ఇప్పుడే దరఖాస్తు చేయండి" }
+    };
+
+    const schemes = [
+        { 
+            name: { en: "PM-KISAN", hi: "प्रधानमंत्री किसान", ta: "பிரதம மந்திரி கிசான்", te: "ప్రధాన మంత్రి కిసాన్" }, 
+            category: { en: "Financial Assistance", hi: "वित्तीय सहायता", ta: "நிதியுதவி", te: "ఆర్థిక సహాయం" }, 
+            state: { en: "India", hi: "भारत", ta: "இந்தியா", te: "భారతదేశం" }, 
+            purpose: { en: "Provides ₹6,000 per year.", hi: "₹6,000 वार्षिक सहायता।", ta: "₹6,000 ஆண்டுக்கு உதவி.", te: "₹6,000 సంవత్సరానికి సాయం." }, 
+            link: "https://pmkisan.gov.in" 
+        },
+        { 
+            name: { en: "Fertilizer Subsidy", hi: "उर्वरक सब्सिडी", ta: "உரங்கள் மானியம்", te: "ఎరువుల అనుబంధం" }, 
+            category: { en: "Fertilizer", hi: "उर्वरक", ta: "உரங்கள்", te: "ఎరువులు" }, 
+            state: { en: "India", hi: "भारत", ta: "இந்தியா", te: "భారతదేశం" }, 
+            purpose: { en: "Subsidies on fertilizers.", hi: "उर्वरकों पर सब्सिडी।", ta: "உரங்களுக்கு மானியம்.", te: "ఎరువులకు రాయితీ." }, 
+            link: "https://fert.nic.in" 
+        },
+        {
+            name: { en: "PM Fasal Bima Yojana", hi: "पीएम फसल बीमा योजना", ta: "பிரதம மந்திரி பயிர் காப்பீடு திட்டம்", te: "ప్రధాన మంత్రి పంట బీమా యోజన" },
+            category: { en: "Crop Insurance", hi: "फसल बीमा", ta: "பயிர் காப்பீடு", te: "పంట బీమా" },
+            state: { en: "India", hi: "भारत", ta: "இந்தியா", te: "భారతదేశం" }, 
+            purpose: { en: "Provides affordable crop insurance against natural calamities, pests, and diseases.", hi: "प्राकृतिक आपदाओं, कीटों और बीमारियों के खिलाफ सस्ती फसल बीमा प्रदान करता है।", ta: "இயற்கை பேரழிவுகள், பூச்சிகள் மற்றும் நோய்களுக்கு எதிராக மலிவான பயிர் காப்பீடு வழங்குகிறது.", te: "సహజ విపత్తులు, పురుగులు మరియు వ్యాధుల నుండి రక్షణగా తక్కువ ధర పంట బీమాను అందిస్తుంది." },
+            link: "https://pmfby.gov.in"
+        },
+
+    {
+        "name": {
+            "en": "Fertilizer Subsidy",
+            "hi": "उर्वरक सब्सिडी",
+            "ta": "உரங்கள் மானியம்",
+            "te": "ఎరువుల అనుబంధం"
+        },
+        "category": {
+            "en": "Fertilizer",
+            "hi": "उर्वरक",
+            "ta": "உரங்கள்",
+            "te": "ఎరువులు"
+        },
+        "state": {
+            "en": "India",
+            "hi": "भारत",
+            "ta": "இந்தியா",
+            "te": "భారతదేశం"
+        },
+        "purpose": {
+            "en": "Offers subsidies on urea and non-urea fertilizers to reduce farming costs and improve productivity.",
+            "hi": "कृषि लागत को कम करने और उत्पादकता बढ़ाने के लिए यूरिया और गैर-यूरिया उर्वरकों पर सब्सिडी प्रदान की जाती है।",
+            "ta": "விவசாய செலவை குறைக்கும் மற்றும் உற்பத்தியை மேம்படுத்த யூரியா மற்றும் யூரியா அல்லாத உரங்களில் மானியம் வழங்கப்படுகிறது.",
+            "te": "వ్యవసాయ ఖర్చులను తగ్గించేందుకు మరియు ఉత్పాదకతను మెరుగుపరచడానికి యూరియా మరియు యూరియా కాని ఎరువులపై అనుబంధం అందించబడుతుంది."
+        },
+        "link": "https://fert.nic.in"
+    },
+    
+    {
+        "name": {
+            "en": "Soil Health Card Scheme",
+            "hi": "मृदा स्वास्थ्य कार्ड योजना",
+            "ta": "மண்ணின் ஆரோக்கிய அட்டை திட்டம்",
+            "te": "మట్టి ఆరోగ్య కార్డ్ పథకం"
+        },
+        "category": {
+            "en": "Soil Health",
+            "hi": "मृदा स्वास्थ्य",
+            "ta": "மண் ஆரோக்கியம்",
+            "te": "మట్టి ఆరోగ్యం"
+        },
+        "state": {
+            "en": "India",
+            "hi": "भारत",
+            "ta": "இந்தியா",
+            "te": "భారతదేశం"
+        },
+        "purpose": {
+            "en": "Helps farmers understand soil nutrient levels and recommends fertilizers to improve yield.",
+            "hi": "किसानों को मिट्टी के पोषक स्तर को समझने और पैदावार बढ़ाने के लिए उर्वरकों की सिफारिश करने में मदद करता है।",
+            "ta": "விவசாயிகள் மண்ணின் ஊட்டச்சத்து அளவைப் புரிந்துகொண்டு உற்பத்தியை மேம்படுத்த உரங்களை பரிந்துரைக்க உதவுகிறது.",
+            "te": "రైతులు మట్టిలోని పోషక స్థాయిలను అర్థం చేసుకోవడానికి మరియు దిగుబడిని మెరుగుపరిచేందుకు ఎరువులను సిఫారసు చేయడానికి సహాయపడుతుంది."
+        },
+        "link": "https://soilhealth.dac.gov.in"
+    },
+    {
+    
+        "name": { "en": "Kisan Credit Card (KCC)", "hi": "किसान क्रेडिट कार्ड (KCC)", "ta": "கிசான் கடன் அட்டை (KCC)", "te": "కిసాన్ క్రెడిట్ కార్డ్ (KCC)" },
+        "category": { "en": "Loan & Credit", "hi": "ऋण और क्रेडिट", "ta": "கடன் & நாணயம்", "te": "ఋణం & క్రెడిట్" },
+        "state": { "en": "India", "hi": "भारत", "ta": "இந்தியா", "te": "భారతదేశం" },
+        "purpose": { "en": "Offers easy access to credit for farmers at low interest rates for purchasing seeds, fertilizers, and equipment.", "hi": "किसानों को बीज, उर्वरक और उपकरण खरीदने के लिए कम ब्याज दरों पर क्रेडिट की आसान पहुंच प्रदान करता है।", "ta": "விவசாயிகள் குறைந்த வட்டி விகிதத்தில் கடன் பெறுவதற்கான வசதியளிக்கிறது.", "te": "వ్యవసాయదారులకు తక్కువ వడ్డీ రేట్లపై విత్తనాలు, ఎరువులు, పరికరాలు కొనుగోలు చేయడానికి సులభమైన క్రెడిట్‌ను అందిస్తుంది." },
+        "link": "https://www.nabard.org"
+    },
+    {
+        "name": { "en": "Subsidy on Seeds", "hi": "बीजों पर सब्सिडी", "ta": "விதைகள் மீது மானியம்", "te": "విత్తనాలపై సబ్సిడీ" },
+        "category": { "en": "Seed Subsidy", "hi": "बीज सब्सिडी", "ta": "விதை மானியம்", "te": "విత్తన సబ్సిడీ" },
+        "state": { "en": "Maharashtra", "hi": "महाराष्ट्र", "ta": "மகாராஷ்டிரா", "te": "మహారాష్ట్ర" },
+        "purpose": { "en": "Provides financial aid to farmers for purchasing high-quality seeds at a reduced price.", "hi": "किसानों को उच्च गुणवत्ता वाले बीजों को रियायती दरों पर खरीदने के लिए वित्तीय सहायता प्रदान करता है।", "ta": "விவசாயிகள் உயர்தர விதைகளை குறைந்த விலையில் வாங்க நிதியுதவி வழங்குகிறது.", "te": "వ్యవసాయదారులకు అధిక నాణ్యత గల విత్తనాలను తక్కువ ధరకు కొనుగోలు చేయడానికి ఆర్థిక సహాయం అందిస్తుంది." },
+        "link": "https://agri.maharashtra.gov.in"
+    },
+    {
+        "name": { "en": "Organic Farming Subsidy", "hi": "जैविक खेती सब्सिडी", "ta": "நிலக்கொழுந்து விவசாய மானியம்", "te": "సేంద్రీయ వ్యవసాయ సబ్సిడీ" },
+        "category": { "en": "Organic Farming", "hi": "जैविक खेती", "ta": "நிலக்கொழுந்து விவசாயம்", "te": "సేంద్రీయ వ్యవసాయం" },
+        "state": { "en": "Kerala", "hi": "केरल", "ta": "கேரளா", "te": "కేరళ" },
+        "purpose": { "en": "Encourages farmers to adopt organic farming by providing financial incentives and training.", "hi": "किसानों को जैविक खेती अपनाने के लिए वित्तीय प्रोत्साहन और प्रशिक्षण प्रदान करता है।", "ta": "நிலக்கொழுந்து விவசாயத்தை பயிற்சி மற்றும் நிதி உதவியுடன் ஊக்குவிக்கிறது.", "te": "వ్యవసాయదారులను సేంద్రీయ వ్యవసాయాన్ని స్వీకరించడానికి ఆర్థిక ప్రోత్సాహకాలు మరియు శిక్షణ అందిస్తుంది." },
+        "link": "https://keralaagriculture.gov.in"
+    },
+    {
+        "name": { "en": "Dairy Entrepreneurship Development", "hi": "डेयरी उद्यमिता विकास", "ta": "பால்வள தொழில்முனைவோர் மேம்பாடு", "te": "పాల పరిశ్రమ అభివృద్ధి" },
+        "category": { "en": "Livestock", "hi": "पशुपालन", "ta": "மிருகபண்ணை", "te": "పశుసంవర్ధక" },
+        "state": { "en": "Punjab", "hi": "पंजाब", "ta": "பஞ்சாப்", "te": "పంజాబ్" },
+        "purpose": { "en": "Supports dairy farmers with loans and subsidies to set up modern dairy farms.", "hi": "आधुनिक डेयरी फार्म स्थापित करने के लिए डेयरी किसानों को ऋण और सब्सिडी प्रदान करता है।", "ta": "நவீன பால் பண்ணைகளை அமைப்பதற்கான கடன்கள் மற்றும் மானியங்களை வழங்குகிறது.", "te": "ఆధునిక పాల పరిశ్రమలను స్థాపించడానికి వ్యవసాయదారులకు రుణాలు మరియు సబ్సిడీలను అందిస్తుంది." },
+        "link": "https://dahd.nic.in"
+    },
+    {
+        "name": { "en": "Agriculture Infrastructure Fund", "hi": "कृषि अवसंरचना कोष", "ta": "விவசாய கட்டமைப்பு நிதி", "te": "వ్యవసాయ మౌలిక సదుపాయాల నిధి" },
+        "category": { "en": "Farm Infrastructure", "hi": "कृषि अवसंरचना", "ta": "விவசாய கட்டமைப்பு", "te": "వ్యవసాయ మౌలిక సదుపాయాలు" },
+        "state": { "en": "India", "hi": "भारत", "ta": "இந்தியா", "te": "భారతదేశం" },
+        "purpose": { "en": "Provides credit support for building cold storage, warehouses, and farm infrastructure.", "hi": "कोल्ड स्टोरेज, वेयरहाउस और कृषि अवसंरचना निर्माण के लिए क्रेडिट सहायता प्रदान करता है।", "ta": "குளிர் சேமிப்பு, களஞ்சியம் மற்றும் விவசாய உள்கட்டமைப்பு உருவாக்கத்திற்கான கடன் ஆதரவை வழங்குகிறது.", "te": "కొల్డ్ స్టోరేజ్, గిడ్డంగులు మరియు వ్యవసాయ మౌలిక సదుపాయాలను నిర్మించడానికి క్రెడిట్ మద్దతు అందిస్తుంది." },
+        "link": "https://agriwelfare.gov.in"
+    },
+    
+    {
+        "name": { "en": "Kisan Credit Card (KCC)", "hi": "किसान क्रेडिट कार्ड (KCC)", "ta": "கிசான் கடன் அட்டை (KCC)", "te": "కిసాన్ క్రెడిట్ కార్డ్ (KCC)" },
+        "category": { "en": "Loan & Credit", "hi": "ऋण और क्रेडिट", "ta": "கடன் & நாணயம்", "te": "ఋణం & క్రెడిట్" },
+        "state": { "en": "India", "hi": "भारत", "ta": "இந்தியா", "te": "భారతదేశం" },
+        "purpose": { "en": "Offers easy access to credit for farmers at low interest rates for purchasing seeds, fertilizers, and equipment.", "hi": "किसानों को बीज, उर्वरक और उपकरण खरीदने के लिए कम ब्याज दरों पर क्रेडिट की आसान पहुंच प्रदान करता है।", "ta": "விவசாயிகள் குறைந்த வட்டி விகிதத்தில் கடன் பெறுவதற்கான வசதியளிக்கிறது.", "te": "వ్యవసాయదారులకు తక్కువ వడ్డీ రేట్లపై విత్తనాలు, ఎరువులు, పరికరాలు కొనుగోలు చేయడానికి సులభమైన క్రెడిట్‌ను అందిస్తుంది." },
+        "link": "https://www.nabard.org"
+    },
+    {
+        "name": { "en": "Subsidy on Seeds", "hi": "बीजों पर सब्सिडी", "ta": "விதைகள் மீது மானியம்", "te": "విత్తనాలపై సబ్సిడీ" },
+        "category": { "en": "Seed Subsidy", "hi": "बीज सब्सिडी", "ta": "விதை மானியம்", "te": "విత్తన సబ్సిడీ" },
+        "state": { "en": "Maharashtra", "hi": "महाराष्ट्र", "ta": "மகாராஷ்டிரா", "te": "మహారాష్ట్ర" },
+        "purpose": { "en": "Provides financial aid to farmers for purchasing high-quality seeds at a reduced price.", "hi": "किसानों को उच्च गुणवत्ता वाले बीजों को रियायती दरों पर खरीदने के लिए वित्तीय सहायता प्रदान करता है।", "ta": "விவசாயிகள் உயர்தர விதைகளை குறைந்த விலையில் வாங்க நிதியுதவி வழங்குகிறது.", "te": "వ్యవసాయదారులకు అధిక నాణ్యత గల విత్తనాలను తక్కువ ధరకు కొనుగోలు చేయడానికి ఆర్థిక సహాయం అందిస్తుంది." },
+        "link": "https://agri.maharashtra.gov.in"
+    },
+    {
+        "name": { "en": "Organic Farming Subsidy", "hi": "जैविक खेती सब्सिडी", "ta": "நிலக்கொழுந்து விவசாய மானியம்", "te": "సేంద్రీయ వ్యవసాయ సబ్సిడీ" },
+        "category": { "en": "Organic Farming", "hi": "जैविक खेती", "ta": "நிலக்கொழுந்து விவசாயம்", "te": "సేంద్రీయ వ్యవసాయం" },
+        "state": { "en": "Kerala", "hi": "केरल", "ta": "கேரளா", "te": "కేరళ" },
+        "purpose": { "en": "Encourages farmers to adopt organic farming by providing financial incentives and training.", "hi": "किसानों को जैविक खेती अपनाने के लिए वित्तीय प्रोत्साहन और प्रशिक्षण प्रदान करता है।", "ta": "நிலக்கொழுந்து விவசாயத்தை பயிற்சி மற்றும் நிதி உதவியுடன் ஊக்குவிக்கிறது.", "te": "వ్యవసాయదారులను సేంద్రీయ వ్యవసాయాన్ని స్వీకరించడానికి ఆర్థిక ప్రోత్సాహకాలు మరియు శిక్షణ అందిస్తుంది." },
+        "link": "https://keralaagriculture.gov.in"
+    },
+    {
+        "name": { "en": "Dairy Entrepreneurship Development", "hi": "डेयरी उद्यमिता विकास", "ta": "பால்வள தொழில்முனைவோர் மேம்பாடு", "te": "పాల పరిశ్రమ అభివృద్ధి" },
+        "category": { "en": "Livestock", "hi": "पशुपालन", "ta": "மிருகபண்ணை", "te": "పశుసంవర్ధక" },
+        "state": { "en": "Punjab", "hi": "पंजाब", "ta": "பஞ்சாப்", "te": "పంజాబ్" },
+        "purpose": { "en": "Supports dairy farmers with loans and subsidies to set up modern dairy farms.", "hi": "आधुनिक डेयरी फार्म स्थापित करने के लिए डेयरी किसानों को ऋण और सब्सिडी प्रदान करता है।", "ta": "நவீன பால் பண்ணைகளை அமைப்பதற்கான கடன்கள் மற்றும் மானியங்களை வழங்குகிறது.", "te": "ఆధునిక పాల పరిశ్రమలను స్థాపించడానికి వ్యవసాయదారులకు రుణాలు మరియు సబ్సిడీలను అందిస్తుంది." },
+        "link": "https://dahd.nic.in"
+    },
+    {
+        "name": { "en": "Agriculture Infrastructure Fund", "hi": "कृषि अवसंरचना कोष", "ta": "விவசாய கட்டமைப்பு நிதி", "te": "వ్యవసాయ మౌలిక సదుపాయాల నిధి" },
+        "category": { "en": "Farm Infrastructure", "hi": "कृषि अवसंरचना", "ta": "விவசாய கட்டமைப்பு", "te": "వ్యవసాయ మౌలిక సదుపాయాలు" },
+        "state": { "en": "India", "hi": "भारत", "ta": "இந்தியா", "te": "భారతదేశం" },
+        "purpose": { "en": "Provides credit support for building cold storage, warehouses, and farm infrastructure.", "hi": "कोल्ड स्टोरेज, वेयरहाउस और कृषि अवसंरचना निर्माण के लिए क्रेडिट सहायता प्रदान करता है।", "ta": "குளிர் சேமிப்பு, களஞ்சியம் மற்றும் விவசாய உள்கட்டமைப்பு உருவாக்கத்திற்கான கடன் ஆதரவை வழங்குகிறது.", "te": "కొల్డ్ స్టోరేజ్, గిడ్డంగులు మరియు వ్యవసాయ మౌలిక సదుపాయాలను నిర్మించడానికి క్రెడిట్ మద్దతు అందిస్తుంది." },
+        "link": "https://agriwelfare.gov.in"
+    },
+    {
+        "name": { "en": "YSR Rythu Bharosa", "hi": "वाईएसआर रैतु भरोसा", "ta": "YSR ரைது பரோசா", "te": "వైఎస్సార్ రైతు భరోసా" },
+        "category": { "en": "Financial Support", "hi": "वित्तीय सहायता", "ta": "நிதி ஆதரவு", "te": "ఆర్థిక మద్దతు" },
+        "state": { "en": "Andhra Pradesh", "hi": "आंध्र प्रदेश", "ta": "ஆந்திரப் பிரதேசம்", "te": "ఆంధ్రప్రదేశ్" },
+        "purpose": { "en": "₹13,500 per year support for farmers.", "hi": "किसानों को ₹13,500 प्रति वर्ष की सहायता।", "ta": "விவசாயிகளுக்கு ஆண்டுக்கு ₹13,500 உதவி.", "te": "రైతులకు సంవత్సరానికి ₹13,500 మద్దతు." },
+        "link": "https://ysrrythubharosa.ap.gov.in"
+    },
+    {
+        "name": { "en": "Tamil Nadu Farmers Crop Insurance", "hi": "तमिलनाडु किसान फसल बीमा", "ta": "தமிழ்நாடு விவசாயிகள் பயிர் காப்பீடு", "te": "తమిళనాడు రైతుల పంట బీమా" },
+        "category": { "en": "Crop Insurance", "hi": "फसल बीमा", "ta": "பயிர் காப்பீடு", "te": "పంట బీమా" },
+        "state": { "en": "Tamil Nadu", "hi": "तमिलनाडु", "ta": "தமிழ்நாடு", "te": "తమిళనాడు" },
+        "purpose": { "en": "Compensation for crop loss due to natural calamities.", "hi": "प्राकृतिक आपदाओं के कारण फसल नुकसान के लिए मुआवजा।", "ta": "இயற்கை பேரழிவுகளால் பயிர் சேதத்திற்கு இழப்பீடு.", "te": "ప్రకృతి విపత్తుల వల్ల పంట నష్టానికి పరిహారం." },
+        "link": "https://www.tnagrisnet.tn.gov.in"
+    }
+
+
+ 
+];
+
+
+    
+
+    const perPage = 10;
+    let currentPage = 1;
+    let currentLang = "en";
+
+    function renderSchemes() {
+        const start = (currentPage - 1) * perPage;
+        const paginatedSchemes = schemes.slice(start, start + perPage);
+        const schemeList = document.getElementById("scheme-list");
+        schemeList.innerHTML = "";
+        paginatedSchemes.forEach(scheme => {
+            schemeList.innerHTML += `
+                <tr>
+                    <td>${scheme.name[currentLang]}</td>
+                    <td>${scheme.category[currentLang]}</td>  <!-- FIXED CATEGORY TRANSLATION -->
+                    <td>${scheme.state[currentLang]}</td>
+                    <td>${scheme.purpose[currentLang]}</td>
+                    <td><a href="${scheme.link}" target="_blank" class="btn btn-primary">${translations[currentLang].applyNow}</a></td>
+                </tr>`;
+        });
+        document.getElementById("prev-btn").disabled = currentPage === 1;
+        document.getElementById("next-btn").disabled = currentPage * perPage >= schemes.length;
+    }
+
+    document.getElementById("language").addEventListener("change", (event) => {
+        currentLang = event.target.value;
+        renderSchemes();
+    });
+
+    document.getElementById("prev-btn").addEventListener("click", () => { currentPage--; renderSchemes(); });
+    document.getElementById("next-btn").addEventListener("click", () => { currentPage++; renderSchemes(); });
+
+    renderSchemes();
+
+
+    function updateTitle() {
+    document.getElementById("title").innerText = translations[currentLang].title;
+}
+
+document.getElementById("language").addEventListener("change", (event) => {
+    currentLang = event.target.value;
+    updateTitle();
+    renderSchemes();
+});
+
+</script>
+
+{% endblock %}

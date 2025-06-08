@@ -1,0 +1,5 @@
+
+    results = Sarvam_STT.detect_and_translate(file_path)
+    text = results["transcript"]
+    if not results["language_code"] == "en":
+        text = Google_Translate.detect_and_translate(text)

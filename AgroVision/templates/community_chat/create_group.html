@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Group - AgroVision Community{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Create New Group</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Group Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        <div class="form-text">Describe the purpose of your group.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="group_image" class="form-label">Group Image (Optional)</label>
+                        <input type="file" class="form-control" id="group_image" name="group_image" accept="image/*">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_public" name="is_public" checked>
+                        <label class="form-check-label" for="is_public">Make this group public</label>
+                        <div class="form-text">Public groups can be seen and joined by anyone.</div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Create Group</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Show image preview when selected
+    document.getElementById('group_image').addEventListener('change', function(e) {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = '';
+        
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = `
+                    <img src="${e.target.result}" class="img-fluid rounded" 
+                         style="max-height: 200px;">
+                    <button type="button" class="btn btn-sm btn-danger mt-2" 
+                            onclick="removeImagePreview()">
+                        <i class="fas fa-times me-1"></i>Remove Image
+                    </button>
+                `;
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
+    function removeImagePreview() {
+        document.getElementById('group_image').value = '';
+        document.getElementById('imagePreview').innerHTML = '';
+    }
+</script>
+{% endblock %} 

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Agriculture Vigilance System{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="leaf-container" style="height: 0; overflow: hidden; position: absolute; top: 0; left: 0; width: 100%; z-index: -1;"></div>
+
+    <!-- Header -->
+    <header class="header bg-success text-white">
+        <div class="container d-flex align-items-center justify-content-between">
+            <div class="logo-and-title d-flex align-items-center">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="me-2 logo-header-img">
+                <h1 class="h4 mb-0" id="site-title">{{ translations.get(g.lang, {}).get('site_title', 'Agriculture Vigilance System') }}</h1>
+            </div>
+            <div class="language-selector">
+                <button class="lang-button btn btn-sm btn-outline-light" data-lang="en">English</button>
+                <button class="lang-button btn btn-sm btn-outline-light" data-lang="hi">हिंदी</button>
+                <button class="lang-button btn btn-sm btn-outline-light" data-lang="ta">தமிழ்</button>
+                <button class="lang-button btn btn-sm btn-outline-light" data-lang="te">తెలుగు</button>
+                <button class="lang-button btn btn-sm btn-outline-light" data-lang="kn">ಕನ್ನಡ</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout Container -->
+    <div class="d-flex">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar bg-dark-green text-white">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('index') }}" data-key="home_link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('video_monitoring') }}" data-key="video_monitoring_link">Video Monitoring</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('disease_detection') }}" data-key="disease_detection_link">Disease Detection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('location_weather_page') }}" data-key="location_weather_link">Location & Weather</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ url_for('schemes') }}" data-key="schemes_link">Agricultural Schemes</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main role="main" class="content-area flex-grow-1">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Floating Chatbot Icon -->
+    <div class="chatbot-icon" id="chatbot-icon">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <!-- Chatbot Overlay -->
+    <div class="chatbot-overlay" id="chatbot-overlay">
+        <div class="card chatbot-card">
+            <div class="card-header chatbot-header">
+                <h5 class="card-title mb-0" id="chatbot-title">{{ translations.get(g.lang, {}).get('chatbot_title', 'Agricultural Assistant Chat') }}</h5>
+                <button type="button" class="btn-close" aria-label="{{ translations.get(g.lang, {}).get('close_button', 'Close') }}" id="close-chatbot"></button>
+            </div>
+            <div class="card-body chatbot-body">
+                <div id="chat-messages" class="mb-3" style="height: 300px; overflow-y: auto;">
+                    <!-- Messages will be added here -->
+                </div>
+                <div class="input-group">
+                    <input type="text" id="message-input" class="form-control" placeholder="{{ translations.get(g.lang, {}).get('message_input_placeholder', 'Type your message...') }}">
+                    <button class="btn btn-primary" id="send-btn" aria-label="{{ translations.get(g.lang, {}).get('send_button', 'Send') }}">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="voice-btn" aria-label="{{ translations.get(g.lang, {}).get('voice_input_button', 'Voice Input') }}">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> {# New JS file for general site scripts #}
+    {% block extra_js %}{% endblock %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const leafContainer = document.querySelector('.leaf-container');
+            const numberOfLeaves = 50;
+
+            function createLeaf() {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.left = Math.random() * 100 + 'vw';
+                leaf.style.animationDuration = Math.random() * 10 + 5 + 's'; // 5-15s
+                leaf.style.animationDelay = Math.random() * 5 + 's';
+                leaf.style.opacity = Math.random() * 0.5 + 0.3;
+                leafContainer.appendChild(leaf);
+
+                // Remove leaf after animation to prevent DOM bloat
+                leaf.addEventListener('animationend', () => {
+                    leaf.remove();
+                    // Optionally create a new leaf to maintain constant number
+                    createLeaf();
+                });
+            }
+
+            for (let i = 0; i < numberOfLeaves; i++) {
+                createLeaf();
+            }
+        });
+    </script>
+</body>
+</html> 

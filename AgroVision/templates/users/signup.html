@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - AgroVision{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-step {
+        display: none;
+    }
+    .form-step.active {
+        display: block;
+    }
+    .profile-preview {
+        max-width: 150px;
+        max-height: 150px;
+        margin: 10px auto;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Create Your Account</h3>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="signupForm">
+                    {% csrf_token %}
+                    
+                    <!-- Step 1: Basic Information -->
+                    <div class="form-step active" id="step1">
+                        <h4 class="mb-4">Basic Information</h4>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone_number" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_confirm" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" name="skip" class="btn btn-outline-secondary">Skip Profile Setup</button>
+                            <button type="button" class="btn btn-success" onclick="nextStep()">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Profile Information -->
+                    <div class="form-step" id="step2">
+                        <h4 class="mb-4">Profile Information</h4>
+                        <div class="mb-3">
+                            <label for="farm_location" class="form-label">Farm Location</label>
+                            <input type="text" class="form-control" id="farm_location" name="farm_location">
+                        </div>
+                        <div class="mb-3">
+                            <label for="farming_type" class="form-label">Type of Farming</label>
+                            <select class="form-select" id="farming_type" name="farming_type">
+                                <option value="">Select farming type</option>
+                                <option value="Crop Farming">Crop Farming</option>
+                                <option value="Livestock">Livestock</option>
+                                <option value="Mixed Farming">Mixed Farming</option>
+                                <option value="Organic Farming">Organic Farming</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preferred_language" class="form-label">Preferred Language</label>
+                            <select class="form-select" id="preferred_language" name="preferred_language">
+                                <option value="English">English</option>
+                                <option value="Hindi">Hindi</option>
+                                <option value="Telugu">Telugu</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*" onchange="previewImage(this)">
+                            <img id="preview" class="profile-preview d-none">
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary" onclick="previousStep()">Previous</button>
+                            <button type="submit" class="btn btn-success">Create Account</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="text-success">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function nextStep() {
+        // Validate first step
+        const username = document.getElementById('username').value;
+        const phone = document.getElementById('phone_number').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('password_confirm').value;
+
+        if (!username || !phone || !password || !confirmPassword) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+
+        // Switch to next step
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+    }
+
+    function previousStep() {
+        document.getElementById('step2').classList.remove('active');
+        document.getElementById('step1').classList.add('active');
+    }
+
+    function previewImage(input) {
+        const preview = document.getElementById('preview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %} 

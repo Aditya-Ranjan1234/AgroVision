@@ -1,0 +1,459 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction History - AgroVision{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-green: #48bb78;
+        --primary-dark: #2f855a;
+        --secondary-gray: #f7fafc;
+        --text-dark: #2d3748;
+        --border-color: #e2e8f0;
+    }
+
+    .history-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-green);
+    }
+
+    .prediction-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+    .prediction-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .prediction-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .prediction-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .prediction-details {
+        flex-grow: 1;
+    }
+
+    .prediction-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .type-disease {
+        background-color: #fed7d7;
+        color: #c53030;
+    }
+
+    .type-pest {
+        background-color: #feebc8;
+        color: #c05621;
+    }
+
+    .weather-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .weather-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .weather-icon {
+        font-size: 1.25rem;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background: white;
+        color: var(--text-dark);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .page-link:hover {
+        background: var(--secondary-gray);
+    }
+
+    .page-link.active {
+        background: var(--primary-green);
+        color: white;
+    }
+
+    .confidence-high {
+        color: #2f855a;
+    }
+
+    .confidence-medium {
+        color: #c05621;
+    }
+
+    .confidence-low {
+        color: #c53030;
+    }
+
+    .recommendation-details {
+        display: none;
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .view-recommendations {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #48bb78;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+        transition: background-color 0.2s;
+    }
+
+    .view-recommendations:hover {
+        background-color: #38a169;
+    }
+
+    .recommendation-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .recommendation-section h4 {
+        color: var(--primary-green);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .recommendation-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .recommendation-list li {
+        display: flex;
+        align-items: start;
+        gap: 0.5rem;
+        padding: 0.25rem 0;
+    }
+
+    .recommendation-list li::before {
+        content: "•";
+        color: var(--primary-green);
+    }
+
+    .toggle-recommendations {
+        background: none;
+        border: none;
+        color: #48bb78;
+        cursor: pointer;
+        font-weight: 500;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .toggle-recommendations:hover {
+        color: #38a169;
+    }
+
+    .toggle-icon {
+        transition: transform 0.2s;
+    }
+
+    .toggle-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+    @media (max-width: 768px) {
+        .prediction-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .prediction-image {
+            width: 150px;
+            height: 150px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <h1 class="text-3xl font-bold mb-8">Prediction History</h1>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_predictions }}</div>
+            <div class="stat-label">Total Predictions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_diseases }}</div>
+            <div class="stat-label">Disease Predictions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ total_pests }}</div>
+            <div class="stat-label">Pest Predictions</div>
+        </div>
+    </div>
+
+    <!-- Prediction List -->
+    {% for prediction in page_obj %}
+    <div class="prediction-card">
+        <div class="prediction-header">
+            <img src="{{ prediction.image_url }}" alt="{{ prediction.label }}" class="prediction-image">
+            <div class="prediction-details">
+                <span class="prediction-type type-{{ prediction.prediction_type }}">
+                    {{ prediction.prediction_type|title }}
+                </span>
+                <h3 class="text-xl font-semibold">{{ prediction.label }}</h3>
+                <p class="text-gray-600">
+                    Confidence: 
+                    <span class="font-semibold 
+                        {% if prediction.confidence >= 0.8 %}confidence-high
+                        {% elif prediction.confidence >= 0.6 %}confidence-medium
+                        {% else %}confidence-low{% endif %}">
+                        {{ prediction.confidence|floatformat:2 }}
+                    </span>
+                </p>
+                <p class="text-gray-600">{{ prediction.date_created|date:"F j, Y, g:i a" }}</p>
+                
+                {% if prediction.treatment_plan %}
+                <button class="toggle-recommendations" onclick="toggleRecommendations('{{ forloop.counter }}')">
+                    <span>View AI Recommendations</span>
+                    <span class="toggle-icon">▼</span>
+                </button>
+                {% else %}
+                <a href="{% url 'treatment-recommendation' %}?prediction_type={{ prediction.prediction_type }}&label={{ prediction.label }}&image_url={{ prediction.image_url|urlencode }}&confidence={{ prediction.confidence }}" 
+                   class="view-recommendations">
+                    🤖 Get AI Recommendations
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Weather Information -->
+        <div class="weather-info">
+            <div class="weather-item">
+                <span class="weather-icon">📍</span>
+                <div>
+                    <div class="text-sm text-gray-600">Location</div>
+                    <div>{{ prediction.location }}</div>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">🌡️</span>
+                <div>
+                    <div class="text-sm text-gray-600">Temperature</div>
+                    <div>{{ prediction.temperature|default:"N/A" }}°C</div>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">💧</span>
+                <div>
+                    <div class="text-sm text-gray-600">Humidity</div>
+                    <div>{{ prediction.humidity|default:"N/A" }}%</div>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">🌱</span>
+                <div>
+                    <div class="text-sm text-gray-600">Soil Moisture</div>
+                    <div>{{ prediction.soil_moisture|default:"N/A" }}%</div>
+                </div>
+            </div>
+        </div>
+
+        {% if prediction.treatment_plan %}
+        <div id="recommendations-{{ forloop.counter }}" class="recommendation-details">
+            {% if prediction.prediction_type == 'disease' %}
+                <!-- Disease Recommendations -->
+                <div class="recommendation-section">
+                    <h4>🔍 Symptoms</h4>
+                    <ul class="recommendation-list">
+                        {% for symptom in prediction.treatment_plan.symptoms %}
+                            <li>{{ symptom }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>⚠️ Causes</h4>
+                    <ul class="recommendation-list">
+                        {% for cause in prediction.treatment_plan.causes %}
+                            <li>{{ cause }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>🛠 Treatment Steps</h4>
+                    <ul class="recommendation-list">
+                        {% for step in prediction.treatment_plan.treatment_steps %}
+                            <li>{{ step }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>🚜 Prevention Tips</h4>
+                    <ul class="recommendation-list">
+                        {% for tip in prediction.treatment_plan.prevention_tips %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <!-- Pest Recommendations -->
+                <div class="recommendation-section">
+                    <h4>💰 Economic Impact</h4>
+                    <p><strong>Yield Loss:</strong> {{ prediction.treatment_plan.economic_impact.yield_loss }}</p>
+                    <ul class="recommendation-list">
+                        {% for detail in prediction.treatment_plan.economic_impact.damage_details %}
+                            <li>{{ detail }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>🌱 Life Cycle</h4>
+                    <p><strong>Duration:</strong> {{ prediction.treatment_plan.life_cycle.duration }}</p>
+                    <p><strong>Peak Activity:</strong> {{ prediction.treatment_plan.life_cycle.peak_activity }}</p>
+                    <ul class="recommendation-list">
+                        {% for condition in prediction.treatment_plan.life_cycle.favorable_conditions %}
+                            <li>{{ condition }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>🔍 Detection Guidelines</h4>
+                    <ul class="recommendation-list">
+                        {% for sign in prediction.treatment_plan.detection.early_signs %}
+                            <li>{{ sign }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="recommendation-section">
+                    <h4>🛠 Management Practices</h4>
+                    <ul class="recommendation-list">
+                        {% for practice in prediction.treatment_plan.management.crop_rotation %}
+                            <li>{{ practice }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="text-center text-gray-600 py-8">
+        No predictions found. Start by uploading an image for analysis.
+    </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1" class="page-link">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a href="?page={{ num }}" class="page-link active">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link">Last &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleRecommendations(id) {
+    const details = document.getElementById(`recommendations-${id}`);
+    const button = details.previousElementSibling.querySelector('.toggle-recommendations');
+    const icon = button.querySelector('.toggle-icon');
+    
+    if (details.style.display === 'none' || !details.style.display) {
+        details.style.display = 'block';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        details.style.display = 'none';
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
+{% endblock %} 

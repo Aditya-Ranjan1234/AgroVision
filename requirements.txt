@@ -1,0 +1,38 @@
+# Core dependencies
+numpy>=1.22.0,<2.0.0
+opencv-python>=4.5.0
+opencv-contrib-python>=4.5.0
+pillow>=9.0.0
+
+# TensorFlow for disease detection
+tensorflow>=2.9.0,<3.0.0
+h5py>=3.1.0  # Required for saving/loading Keras models
+
+# Deep learning
+torch>=1.10.0
+torchvision>=0.11.0
+ultralytics>=8.0.0  # For YOLO models
+
+# Web dashboard
+flask==2.0.1
+flask-socketio==5.1.1
+flask-cors==3.0.10
+python-dotenv==0.19.0
+
+# Weather and location
+requests==2.26.0
+geopy>=2.3.0
+python-weather>=1.0.4
+
+# Chat assistant
+groq==0.4.2
+openai>=0.28.0
+
+# Utilities
+python-dateutil>=2.8.2
+loguru>=0.6.0
+tqdm>=4.64.0      # For progress bars
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0  # For test coverage reports

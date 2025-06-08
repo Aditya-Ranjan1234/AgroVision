@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Logged Out - AgroVision{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if user.is_authenticated %}
+                    <h2 class="mb-4">Confirm Logout</h2>
+                    <p class="mb-4">Are you sure you want to logout?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Yes, Logout</button>
+                        <a href="{% url 'community_chat:chat_home' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                    </form>
+                {% else %}
+                    <h2 class="mb-4">Successfully Logged Out</h2>
+                    <p class="mb-4">Thank you for using AgroVision Community. You have been successfully logged out.</p>
+                    <a href="{% url 'login' %}" class="btn btn-success">Log In Again</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

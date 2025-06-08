@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}Disease & Pest Detection - FarmVigilance{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-4">Plant Disease & Pest Detection</h2>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Upload Plant Image</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="upload-area" id="uploadArea">
+                                <i class="bi bi-cloud-upload"></i>
+                                <p>Drag & drop an image here or click to select</p>
+                                <input type="file" id="imageInput" accept="image/*" class="d-none">
+                            </div>
+                            <div class="text-center mt-3">
+                                <div class="btn-group" role="group">
+                                    <input type="radio" class="btn-check" name="analysisType" id="diseaseType" autocomplete="off" checked>
+                                    <label class="btn btn-outline-success" for="diseaseType">Detect Disease</label>
+                                    
+                                    <input type="radio" class="btn-check" name="analysisType" id="pestType" autocomplete="off">
+                                    <label class="btn btn-outline-success" for="pestType">Detect Pest</label>
+                                </div>
+                                <button id="analyzeBtn" class="btn btn-primary ms-2" disabled>
+                                    <span class="spinner-border spinner-border-sm d-none" id="analyzeSpinner" role="status" aria-hidden="true"></span>
+                                    Analyze Image
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="preview-container">
+                                <img id="imagePreview" src="" alt="Preview" class="img-fluid d-none">
+                                <div id="noPreview" class="text-center text-muted p-4">
+                                    <i class="bi bi-image fs-1"></i>
+                                    <p class="mt-2">Preview will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card d-none" id="resultCard">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Analysis Result</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="result-image-container">
+                                <img id="resultImage" src="" alt="Analyzed Image" class="img-fluid rounded">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="result-details">
+                                <h4 id="resultLabel" class="mb-3">Result</h4>
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div id="confidenceBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" 
+                                         aria-valuemax="100">0%</div>
+                                </div>
+                                <div class="mb-3">
+                                    <h5>Confidence: <span id="confidenceValue" class="fw-bold">0%</span></h5>
+                                </div>
+                                <div class="treatment-box">
+                                    <h5>Recommended Treatment:</h5>
+                                    <div id="treatmentText" class="p-3 bg-light rounded">
+                                        Upload and analyze an image to see treatment recommendations.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Detection History</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Detection</th>
+                                    <th>Confidence</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detectionHistory">
+                                <!-- History will be populated by JavaScript -->
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No detection history yet.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const noPreview = document.getElementById('noPreview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const analyzeSpinner = document.getElementById('analyzeSpinner');
+        const resultCard = document.getElementById('resultCard');
+        const resultImage = document.getElementById('resultImage');
+        const resultLabel = document.getElementById('resultLabel');
+        const confidenceBar = document.getElementById('confidenceBar');
+        const confidenceValue = document.getElementById('confidenceValue');
+        const treatmentText = document.getElementById('treatmentText');
+        const detectionHistory = document.getElementById('detectionHistory');
+        
+        // Handle drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            uploadArea.classList.add('highlight');
+        }
+        
+        function unhighlight() {
+            uploadArea.classList.remove('highlight');
+        }
+        
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+        
+        // Handle file input change
+        imageInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+        
+        // Handle click on upload area
+        uploadArea.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('d-none');
+                        noPreview.classList.add('d-none');
+                        analyzeBtn.disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+        
+        // Handle analyze button click
+        analyzeBtn.addEventListener('click', function() {
+            if (imageInput.files.length > 0) {
+                analyzeImage(imageInput.files[0]);
+            }
+        });
+        
+        function analyzeImage(file) {
+            const formData = new FormData();
+            const analysisType = document.querySelector('input[name="analysisType"]:checked').id === 'diseaseType' ? 'disease' : 'pest';
+            
+            formData.append('file', file);
+            formData.append('type', analysisType);
+            
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeSpinner.classList.remove('d-none');
+            
+            // Send request to server
+            fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Update UI with results
+                resultImage.src = imagePreview.src;
+                resultLabel.textContent = data.label.replace(/_/g, ' ');
+                const confidence = data.confidence;
+                confidenceBar.style.width = confidence + '%';
+                confidenceBar.textContent = confidence + '%';
+                confidenceBar.setAttribute('aria-valuenow', confidence);
+                confidenceValue.textContent = confidence + '%';
+                treatmentText.textContent = data.treatment;
+                
+                // Show result card
+                resultCard.classList.remove('d-none');
+                
+                // Add to history
+                addToHistory({
+                    type: analysisType,
+                    label: data.label,
+                    confidence: confidence,
+                    timestamp: new Date().toISOString()
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error analyzing image: ' + error.message);
+            })
+            .finally(() => {
+                analyzeBtn.disabled = false;
+                analyzeSpinner.classList.add('d-none');
+            });
+        }
+        
+        function addToHistory(entry) {
+            const historyItem = document.createElement('tr');
+            const date = new Date(entry.timestamp);
+            const formattedDate = date.toLocaleString();
+            
+            // Format label for display
+            let displayLabel = entry.label;
+            if (displayLabel.includes('__')) {
+                // Format plant names like 'Pepper__bell___Bacterial_spot'
+                const parts = displayLabel.split('___');
+                if (parts.length === 2) {
+                    const plant = parts[0].replace('__', ' ');
+                    const condition = parts[1].replace(/_/g, ' ');
+                    displayLabel = `${plant}: ${condition}`;
+                } else {
+                    displayLabel = displayLabel.replace(/_/g, ' ');
+                }
+            } else {
+                displayLabel = displayLabel.replace(/_/g, ' ');
+            }
+            
+            // Capitalize first letter of each word
+            displayLabel = displayLabel.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+            
+            historyItem.innerHTML = `
+                <td>${formattedDate}</td>
+                <td><span class="badge bg-${entry.type === 'disease' ? 'info' : 'warning'}">${entry.type}</span></td>
+                <td>${displayLabel}</td>
+                <td>${entry.confidence}%</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-result" data-label="${entry.label}" 
+                            data-confidence="${entry.confidence}" data-type="${entry.type}">
+                        <i class="bi bi-eye"></i> View
+                    </button>
+                </td>
+            `;
+            
+            // Add to the beginning of the table
+            const firstRow = detectionHistory.firstElementChild;
+            if (firstRow && firstRow.cells[0].colSpan === 5) {
+                // Remove the "No history" message if it's the first row
+                detectionHistory.removeChild(firstRow);
+            }
+            detectionHistory.insertBefore(historyItem, detectionHistory.firstChild);
+            
+            // Add event listener to the view button
+            historyItem.querySelector('.view-result').addEventListener('click', function() {
+                viewResult(this.dataset);
+            });
+        }
+        
+        function viewResult(data) {
+            // Scroll to result card
+            resultCard.scrollIntoView({ behavior: 'smooth' });
+            
+            // Update result card
+            resultImage.src = imagePreview.src || '';
+            resultLabel.textContent = data.label.replace(/_/g, ' ');
+            confidenceBar.style.width = data.confidence + '%';
+            confidenceBar.textContent = data.confidence + '%';
+            confidenceBar.setAttribute('aria-valuenow', data.confidence);
+            confidenceValue.textContent = data.confidence + '%';
+            
+            // Show result card
+            resultCard.classList.remove('d-none');
+        }
+        
+        // Load detection history from localStorage
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('detectionHistory') || '[]');
+            if (history.length > 0) {
+                detectionHistory.innerHTML = ''; // Clear the "No history" message
+                history.forEach(entry => addToHistory(entry));
+            }
+        }
+        
+        // Save detection to history in localStorage
+        function saveToHistory(entry) {
+            let history = JSON.parse(localStorage.getItem('detectionHistory') || '[]');
+            history.unshift(entry);
+            if (history.length > 10) {
+                history = history.slice(0, 10); // Keep only the last 10 entries
+            }
+            localStorage.setItem('detectionHistory', JSON.stringify(history));
+        }
+        
+        // Initialize
+        loadHistory();
+    });
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .upload-area {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .upload-area.highlight {
+        border-color: #198754;
+        background-color: #e8f5e9;
+    }
+    
+    .upload-area i {
+        font-size: 3rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    
+    .upload-area p {
+        margin: 0;
+        color: #6c757d;
+    }
+    
+    .preview-container {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-color: #f8f9fa;
+    }
+    
+    .preview-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    .result-image-container {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f8f9fa;
+    }
+    
+    .result-image-container img {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+    }
+    
+    .treatment-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+    
+    .progress {
+        height: 25px;
+        border-radius: 12px;
+    }
+    
+    .progress-bar {
+        font-weight: 500;
+    }
+    
+    .btn-check:checked + .btn-outline-success {
+        background-color: #198754;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .preview-container {
+            margin-top: 1rem;
+            height: 200px;
+        }
+        
+        .upload-area {
+            height: 200px;
+        }
+    }
+</style>
+{% endblock %}

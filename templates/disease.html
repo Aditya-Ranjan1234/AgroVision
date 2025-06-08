@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Disease Detection - Agriculture Vigilance System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Disease Detection</h2>
+    
+    <div class="row">
+        <!-- Image Upload -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Upload Plant Image</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('disease_detection') }}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select Image</label>
+                            <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Analyze</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Detection Results</h5>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% elif results %}
+                    <div class="card mt-4 result-card border-{{ results.severity }}">
+                        <div class="card-body">
+                            <h5 class="card-title text-{{ results.severity }}">{{ results.disease }}</h5>
+                            <p class="card-text">{{ results.description }}</p>
+                            {% if results.treatment %}
+                            <h6>Treatment:</h6>
+                            <p>{{ results.treatment }}</p>
+                            {% endif %}
+                            {% if results.symptoms %}
+                            <h6>Symptoms:</h6>
+                            <p>{{ results.symptoms }}</p>
+                            {% endif %}
+                            {% if results.causes %}
+                            <h6>Causes:</h6>
+                            <p>{{ results.causes }}</p>
+                            {% endif %}
+                            {% if results.prevention %}
+                            <h6>Prevention:</h6>
+                            <p>{{ results.prevention }}</p>
+                            {% endif %}
+                            {% if image_path %}
+                            <img src="{{ image_path }}" alt="Uploaded Image" class="img-fluid mt-3" style="max-width: 300px;">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                        <p class="text-muted">Upload an image to analyze for plant diseases.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

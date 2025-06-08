@@ -1,0 +1,376 @@
+{% extends 'base.html'%}
+
+{% block extra_css %}
+<style>
+    /* Modern theme colors and variables */
+    :root {
+        --primary-green: #48bb78;
+        --primary-dark: #2f855a;
+        --secondary-gray: #f7fafc;
+        --text-dark: #2d3748;
+        --border-color: #e2e8f0;
+    }
+
+    body {
+        background-color: var(--secondary-gray);
+        color: var(--text-dark);
+    }
+
+    .upload-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .prediction-options {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .prediction-box {
+        position: relative;
+        cursor: pointer;
+        padding: 1rem 2rem;
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .prediction-box:hover {
+        border-color: var(--primary-green);
+    }
+
+    .prediction-box input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .prediction-box input[type="radio"]:checked + span {
+        color: var(--primary-green);
+        font-weight: 600;
+    }
+
+    .prediction-box input[type="radio"]:checked + span::before {
+        content: '✓';
+        position: absolute;
+        left: 1rem;
+        color: var(--primary-green);
+    }
+
+    .file-upload-area {
+        border: 2px dashed var(--border-color);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-area:hover {
+        border-color: var(--primary-green);
+        background-color: var(--secondary-gray);
+    }
+
+    .custom-file-upload {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-green);
+        color: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .custom-file-upload:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    #imageUpload {
+        display: none;
+    }
+
+    #fileName {
+        margin-top: 1rem;
+        color: #718096;
+    }
+
+    .result-container {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: var(--secondary-gray);
+        border-radius: 1rem;
+    }
+
+    .result-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .prediction-result {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .ai-recommend-btn {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+    }
+
+    .ai-recommend-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+
+    /* Loading spinner styles */
+    .loading-spinner {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary-green);
+        animation: spin 1s ease-in-out infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .loading-text {
+        margin-top: 1rem;
+        color: var(--primary-green);
+        font-weight: 500;
+    }
+
+    /* Submit button styles */
+    button[type="submit"] {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1.5rem;
+    }
+
+    button[type="submit"]:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}
+
+{% block title %}Upload Image - AgroVision{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <h2 class="text-3xl font-bold text-center mb-8">Upload an Image for Prediction</h2>
+
+    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+
+        <div class="prediction-options">
+            <label class="prediction-box">
+                <input type="radio" name="prediction_type" value="disease" required>
+                <span>Disease Prediction</span>
+            </label>
+
+            <label class="prediction-box">
+                <input type="radio" name="prediction_type" value="pest" required>
+                <span>Pest Prediction</span>
+            </label>
+        </div>
+
+        <div class="file-upload-area">
+            <input type="file" name="image" id="imageUpload" required accept="image/*">
+            <label for="imageUpload" class="custom-file-upload">
+                <i class="fas fa-cloud-upload-alt mr-2"></i>  Choose File
+            </label>
+            <p id="fileName" class="text-sm">No file chosen</p>
+        </div>
+
+        <button type="submit">
+            <i class="fas fa-upload mr-2"></i>  Upload & Predict
+        </button>
+    </form>
+    
+    {% if file_url %}
+        <div class="result-container">
+            <h3 class="text-xl font-semibold mb-4"> Uploaded Image</h3>
+            <img id="imagePreview" src="{{ file_url }}" alt="Uploaded Image" class="mx-auto">
+
+            <div class="prediction-result">
+                <h3 class="text-xl font-semibold mb-4">Prediction Result</h3>
+                <p class="mb-2"><strong>Label:</strong> <span class="text-primary-green">{{label}}</span></p>
+                <p><strong>Confidence:</strong> <span class="text-primary-green">{{ confidence}}</span></p>
+            </div>
+
+            <form action="{% url 'treatment_recommendation' %}" method="GET" id="recommendationForm">
+                <input type="hidden" name="prediction_type" value="{{ prediction_type }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="image_url" value="{{ file_url }}">
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+                <input type="hidden" name="city" id="city">
+                <button type="submit" class="ai-recommend-btn">
+                    Get AI Recommendations
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    function showLoading(message) {
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = `
+            <div class="loading-spinner"></div>
+            <div class="loading-text">${message}</div>
+        `;
+        document.body.appendChild(loadingOverlay);
+    }
+
+    function hideLoading() {
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.remove();
+        }
+    }
+
+    // Show selected file name and preview
+    document.getElementById("imageUpload").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        const fileName = file ? file.name : "No file chosen";
+        document.getElementById("fileName").textContent = fileName;
+
+        // Preview selected image
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById("imagePreview");
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Show loading when upload form is submitted
+    document.getElementById('uploadForm').addEventListener('submit', function() {
+        showLoading('Analyzing your image...');
+    });
+
+    // Get user's location when the recommendation form is submitted
+    document.getElementById('recommendationForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        showLoading('Getting your location...');
+        
+        try {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(async function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    try {
+                        showLoading('Finding nearest city...');
+                        const response = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?` +
+                            `format=json&lat=${latitude}&lon=${longitude}` +
+                            `&zoom=10&addressdetails=1&accept-language=en`
+                        );
+                        const data = await response.json();
+                        
+                        // Try to get the most accurate city name
+                        const addressComponents = ['city', 'town', 'village', 'suburb', 'municipality', 'district', 'county'];
+                        let city = 'Chittoor'; // Default to Chittoor
+
+                        for (const component of addressComponents) {
+                            if (data.address[component]) {
+                                city = data.address[component];
+                                break;
+                            }
+                        }
+                        
+                        // Set form values
+                        document.getElementById('latitude').value = latitude;
+                        document.getElementById('longitude').value = longitude;
+                        document.getElementById('city').value = city;
+                        
+                        // Submit form
+                        showLoading('Generating AI recommendations...');
+                        e.target.submit();
+                    } catch (error) {
+                        console.error('Error getting city:', error);
+                        // Submit with default city
+                        document.getElementById('latitude').value = latitude;
+                        document.getElementById('longitude').value = longitude;
+                        document.getElementById('city').value = 'Chittoor';
+                        showLoading('Generating AI recommendations...');
+                        e.target.submit();
+                    }
+                }, function(error) {
+                    console.error('Error getting location:', error);
+                    document.getElementById('city').value = 'Chittoor';
+                    showLoading('Generating AI recommendations...');
+                    e.target.submit();
+                });
+            } else {
+                console.log('Geolocation not supported');
+                document.getElementById('city').value = 'Chittoor';
+                showLoading('Generating AI recommendations...');
+                e.target.submit();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('city').value = 'Chittoor';
+            showLoading('Generating AI recommendations...');
+            e.target.submit();
+        }
+    });
+</script>
+{% endblock %}

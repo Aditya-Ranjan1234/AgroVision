@@ -1,0 +1,512 @@
+html, body {
+    height: 100%; /* Ensure html and body take full height */
+    margin: 0 !important; /* Ensure no default margin */
+    padding: 0 !important; /* Ensure no default padding */
+}
+
+/* General Body and Container Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e8f5e9; /* Lightest green background */
+    color: #212529;
+    line-height: 1.6;
+    overflow-x: hidden; /* Keep overflow-x hidden */
+    display: flex; /* Use flexbox for body to manage main layout */
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.header {
+    background-color: #4CAF50; /* A vibrant green for the header */
+    color: white;
+    padding: 5px 20px; /* Adjusted padding, reduced slightly */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    height: 60px; /* Adjusted height slightly */
+    flex-shrink: 0; /* Prevent header from shrinking */
+    justify-content: space-between; /* Distribute items and push language selector to right */
+}
+
+.logo-header-img {
+    height: 40px; /* Adjusted logo height */
+    margin-right: 15px; /* Increased margin for better separation */
+}
+
+.logo-and-title {
+    display: flex;
+    align-items: center;
+}
+
+.language-selector {
+    display: flex;
+    gap: 10px; /* Space between language buttons */
+}
+
+.lang-button {
+    background-color: transparent; /* Make buttons transparent */
+    color: white;
+    border: 1px solid white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.lang-button:hover,
+.lang-button.active {
+    background-color: rgba(255, 255, 255, 0.2); /* Light background on hover/active */
+    color: white;
+    border-color: white;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.5rem; /* Adjusted font size */
+    font-weight: 700;
+}
+
+/* Main Layout Container */
+.d-flex {
+    flex-grow: 1; /* Allow the main content area to take remaining space */
+    margin-top: 0 !important; /* Ensure no top margin */
+    padding-top: 0 !important; /* Ensure no top padding */
+    height: calc(100vh - 60px); /* Explicitly set height to remaining after header */
+    display: flex; /* Re-enable flex for side-by-side layout */
+    flex-direction: row; /* Set to row for vertical sidebar */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px; /* Fixed width for vertical sidebar */
+    background-color: #1B5E20;
+    height: 100%; /* Fill 100% of its flex container height */
+    padding-top: 0; /* Removed top padding from sidebar itself */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column; /* Vertical arrangement */
+}
+
+.sidebar .nav {
+    flex-grow: 1; /* Allow the nav list to grow */
+    display: flex;
+    flex-direction: column; /* Vertical items */
+    justify-content: space-between; /* Evenly space items vertically, pushing first/last to edges */
+    padding: 0; /* Ensure no default padding for the nav list */
+    list-style: none; /* Remove bullet points */
+    margin: 0; /* Remove default margin */
+}
+
+.sidebar .nav-item {
+    margin-bottom: 0;
+    flex-grow: 1; /* Allow each item to grow to take equal space */
+    text-align: left; /* Align text to the left for tabs */
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    padding: 15px 20px; /* Adjusted padding for vertical tabs */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex; /* Use flex to center content */
+    align-items: center; /* Center text vertically */
+    height: 100%; /* Make link fill the nav-item height */
+    text-align: left; /* Ensure text is left-aligned */
+    border-radius: 0; /* Ensure no border-radius for block-like appearance */
+}
+
+.sidebar .nav-link:hover {
+    background-color: #2E7D32;
+    color: #ffffff !important;
+    border-radius: 0;
+}
+
+/* Main Content Area */
+.content-area {
+    flex-grow: 1;
+    background-color: #f5f5f5; /* Light gray background for content */
+    padding: 20px; /* Default padding for content within */
+    padding-top: 0 !important; /* Ensure no top padding for content area itself */
+    margin-top: 0 !important; /* Ensure no top margin for content area itself */
+}
+
+.content-area > .container:first-child {
+    padding-top: 0 !important; /* Force remove padding from the first container inside content area */
+    margin-top: 0 !important; /* Force remove margin from the first container inside content area */
+}
+
+/* Override Bootstrap default padding on the first content block within content-area */
+.content-area .p-4.mb-4.bg-light.rounded-3 {
+    padding-top: 0 !important;
+    margin-top: 0 !important; /* Also remove margin top */
+    padding-left: 0; /* Remove left padding */
+    padding-right: 0; /* Remove right padding */
+    padding-bottom: 0; /* Remove bottom padding */
+}
+
+/* Ensure the jumbotron-like section's inner container has no top padding */
+.content-area .p-4.mb-4.bg-light.rounded-3 .container-fluid.py-4 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important; /* Also remove bottom padding */
+}
+
+/* Specific styling for the jumbotron-like section on index.html */
+.jumbotron {
+    padding: 2rem 1rem; /* Reduced padding for the jumbotron */
+    margin-bottom: 0; /* Remove bottom margin */
+    border-radius: 0; /* Remove border radius */
+}
+
+.jumbotron h1 {
+    font-size: 2.5rem; /* Adjust font size if needed */
+}
+
+.jumbotron p {
+    font-size: 1.1rem; /* Adjust font size if needed */
+}
+
+.jumbotron .btn {
+    margin-top: 1rem; /* Add some space above the button */
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #43a047; /* Medium green for card headers */
+    color: white;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #2e7d32; /* Primary green button */
+    border-color: #2e7d32;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #388e3c; /* Darker green on hover */
+    border-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: #66bb6a; /* Success green button */
+    border-color: #66bb6a;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #7cb342; /* Slightly different green on hover */
+    border-color: #7cb342;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #81c784; /* Secondary light green button */
+    border-color: #81c784;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #9ccc65; /* Lighter green on hover */
+    border-color: #9ccc65;
+    transform: translateY(-2px);
+}
+
+/* Form Control Styles */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #a5d6a7;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #43a047;
+    box-shadow: 0 0 0 0.25rem rgba(67, 160, 71, 0.25);
+}
+
+/* Chatbot Icon and Overlay Styles */
+.chatbot-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #2e7d32; /* Primary green */
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1050; /* Above other content */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.chatbot-icon:hover {
+    transform: translateY(-3px) scale(1.05);
+    background-color: #388e3c;
+}
+
+.chatbot-overlay {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 380px; /* Adjust width as needed */
+    height: 500px; /* Adjust height as needed */
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1040;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+}
+
+.chatbot-overlay.open {
+    display: flex;
+}
+
+.chatbot-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbot-header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-header .btn-close {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    color: white;
+    opacity: 0.8;
+}
+
+.chatbot-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    overflow-y: hidden; /* To allow #chat-messages to scroll */
+}
+
+#chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+.input-group {
+    margin-top: 15px;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background-color: #dcf8c6; /* Light green for user messages */
+    align-self: flex-end;
+}
+
+.assistant-message {
+    background-color: #e0e0e0; /* Light gray for assistant messages */
+    align-self: flex-start;
+}
+
+.system-message {
+    background-color: #fff3cd; /* Light yellow for system messages */
+    color: #856404;
+    border: 1px solid #ffeeba;
+    align-self: center;
+    text-align: center;
+    width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chatbot-overlay {
+        width: 90%;
+        height: 80%;
+        bottom: 5%;
+        right: 5%;
+        left: 5%; /* Center horizontally */
+        top: auto;
+    }
+
+    .chatbot-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+.leaf-container {
+    display: none !important; /* Hide the leaf animation */
+}
+
+/* Specific styling for the jumbotron-like section on index.html */
+.jumbotron {
+    padding: 2rem 1rem; /* Reduced padding for the jumbotron */
+    margin-bottom: 0; /* Remove bottom margin */
+    border-radius: 0; /* Remove border radius */
+}
+
+.jumbotron h1 {
+    font-size: 2.5rem; /* Adjust font size if needed */
+}
+
+.jumbotron p {
+    font-size: 1.1rem; /* Adjust font size if needed */
+}
+
+.jumbotron .btn {
+    margin-top: 1rem; /* Add some space above the button */
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #43a047; /* Medium green for card headers */
+    color: white;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    border-bottom: none;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #2e7d32; /* Primary green button */
+    border-color: #2e7d32;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #388e3c; /* Darker green on hover */
+    border-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: #66bb6a; /* Success green button */
+    border-color: #66bb6a;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #7cb342; /* Slightly different green on hover */
+    border-color: #7cb342;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #81c784; /* Secondary light green button */
+    border-color: #81c784;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #9ccc65; /* Lighter green on hover */
+    border-color: #9ccc65;
+    transform: translateY(-2px);
+}
+
+/* Form Control Styles */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #a5d6a7;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #43a047;
+    box-shadow: 0 0 0 0.25rem rgba(67, 160, 71, 0.25);
+}
+
+/* Additional Styles for general use */
+.bg-success {
+    background-color: #388e3c !important; /* Deeper green for success cards */
+}
+
+.bg-warning {
+    background-color: #a5d6a7 !important; /* Lighter green for warning cards */
+    color: #1b5e20 !important;
+}
+
+.bg-warning h2, .bg-warning p, .bg-warning .btn {
+    color: #1b5e20 !important;
+}
+
+.bg-warning .btn-outline-secondary {
+    border-color: #1b5e20;
+    color: #1b5e20;
+}
+
+
+

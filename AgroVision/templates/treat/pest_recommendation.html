@@ -1,0 +1,557 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AgroVision - Pest Management Plan{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-green: #0B5B2E;
+        --light-green: #90EE90;
+        --white: #ffffff;
+    }
+
+    .auth-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .auth-buttons button {
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .login-btn {
+        background: transparent;
+        border: 1px solid var(--primary-green);
+        color: var(--primary-green);
+    }
+
+    .signup-btn {
+        background: var(--primary-green);
+        border: none;
+        color: white;
+    }
+
+    .pest-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .pest-header {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: linear-gradient(to right, #f0f7f0, #ffffff);
+        border-radius: 8px;
+    }
+
+    .pest-image {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .pest-info {
+        flex-grow: 1;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+    }
+
+    .section-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .section-title {
+        color: #2c5282;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        background: #f7fafc;
+        padding: 1rem;
+        border-radius: 6px;
+    }
+
+    .info-item h4 {
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .info-list li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .info-list li::before {
+        content: "•";
+        color: #48bb78;
+        position: absolute;
+        left: 0;
+    }
+
+    .severity-indicator {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-weight: 500;
+        margin-left: 1rem;
+    }
+
+    .severity-high {
+        background-color: #fed7d7;
+        color: #c53030;
+    }
+
+    .severity-medium {
+        background-color: #feebc8;
+        color: #c05621;
+    }
+
+    .severity-low {
+        background-color: #c6f6d5;
+        color: #2f855a;
+    }
+
+    .download-section {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .download-btn {
+        background-color: #48bb78;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s;
+    }
+
+    .download-btn:hover {
+        background-color: #38a169;
+    }
+
+    @media (max-width: 768px) {
+        .pest-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .pest-image {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .weather-section {
+        max-width: 1200px;
+        margin: 0 auto 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .weather-card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+    }
+
+    .weather-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .weather-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #f7fafc;
+        border-radius: 6px;
+    }
+
+    .weather-icon {
+        font-size: 1.5rem;
+    }
+
+    .weather-alert {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        background: #fff5f5;
+        border-radius: 6px;
+        border-left: 4px solid #f56565;
+    }
+
+    .alert-text {
+        color: #c53030;
+        margin: 0;
+    }
+
+    .risk-high {
+        color: #c53030;
+        font-weight: bold;
+    }
+
+    .risk-medium {
+        color: #c05621;
+        font-weight: bold;
+    }
+
+    .risk-low {
+        color: #2f855a;
+        font-weight: bold;
+    }
+
+    .weather-recommendations {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f0fff4;
+        border-radius: 6px;
+    }
+
+    .recommendation-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Weather Alert Section -->
+<div class="weather-section">
+    <div class="weather-card">
+        <h3 class="section-title">
+            <span>🌤️</span> Local Weather Conditions for {{ weather_data.current.location_name|default:"Chittoor" }}
+        </h3>
+        <div class="weather-info">
+            <div class="weather-item">
+                <span class="weather-icon">🌡️</span>
+                <div>
+                    <h4 class="mb-1">Temperature</h4>
+                    <p>{{ weather_data.current.temperature|default:"28"|floatformat:1 }}°C</p>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">💧</span>
+                <div>
+                    <h4 class="mb-1">Humidity</h4>
+                    <p>{{ weather_data.current.humidity|default:"65"|floatformat:0 }}%</p>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">🌱</span>
+                <div>
+                    <h4 class="mb-1">Soil Moisture</h4>
+                    <p>{{ weather_data.current.soil_moisture|default:"45"|floatformat:0 }}%</p>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">🌍</span>
+                <div>
+                    <h4 class="mb-1">Soil pH</h4>
+                    <p>{{ weather_data.current.soil_ph|default:"6.5"|floatformat:1 }}</p>
+                </div>
+            </div>
+            <div class="weather-item">
+                <span class="weather-icon">⚡</span>
+                <div>
+                    <h4 class="mb-1">Pest Activity Risk</h4>
+                    <p>
+                        {% with temp=weather_data.current.temperature|default:"28"|floatformat:0|stringformat:"i" humid=weather_data.current.humidity|default:"65"|floatformat:0|stringformat:"i" %}
+                            {% if temp >= "25" and humid >= "70" %}
+                                <span class="risk-high">High</span>
+                            {% elif temp >= "20" and humid >= "60" %}
+                                <span class="risk-medium">Medium</span>
+                            {% else %}
+                                <span class="risk-low">Low</span>
+                            {% endif %}
+                        {% endwith %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {% with temp=weather_data.current.temperature|default:"28" humid=weather_data.current.humidity|default:"65" %}
+        {% if temp >= 25 and humid >= 70 %}
+        <div class="weather-alert">
+            <p class="alert-text">⚠️ High pest activity risk due to warm temperature and high humidity. Increase monitoring frequency.</p>
+        </div>
+        {% endif %}
+
+        <div class="weather-recommendations">
+            <h4 class="mb-2">Weather-based Recommendations:</h4>
+            <div class="recommendation-item">
+                {% if temp >= 25 and humid >= 70 %}
+                    <span>🔍</span> Increase monitoring frequency due to favorable pest conditions
+                {% elif temp >= 20 and humid >= 60 %}
+                    <span>👀</span> Maintain regular monitoring schedule
+                {% else %}
+                    <span>✅</span> Lower pest activity expected, continue routine monitoring
+                {% endif %}
+            </div>
+            {% endwith %}
+
+            {% with soil_moisture=weather_data.current.soil_moisture|default:"45" %}
+            <div class="recommendation-item">
+                {% if soil_moisture > 70 %}
+                    <span>💧</span> High soil moisture may increase disease risk
+                {% elif soil_moisture < 30 %}
+                    <span>🌱</span> Low soil moisture may stress plants, monitor closely
+                {% else %}
+                    <span>✅</span> Soil moisture levels are optimal
+                {% endif %}
+            </div>
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+<div class="pest-container">
+    <div class="pest-header">
+        <img src="{{ disease_image }}" alt="{{ treatment_plan.pest_name }}" class="pest-image">
+        <div class="pest-info">
+            <h1>Pest Management Plan for: {{ treatment_plan.pest_name }}</h1>
+            {% with yield_loss=treatment_plan.economic_impact.yield_loss %}
+            <span class="severity-indicator 
+                {% if '50' in yield_loss %}severity-high
+                {% elif '30' in yield_loss %}severity-medium
+                {% else %}severity-low{% endif %}">
+                Expected Yield Loss: {{ yield_loss }}
+            </span>
+            {% endwith %}
+        </div>
+    </div>
+
+    <div class="info-grid">
+        <!-- Economic Impact Section -->
+        <div class="section-card">
+            <h3 class="section-title">
+                <span>💰</span> Economic Impact
+            </h3>
+            <div class="info-item">
+                <h4>Damage Details</h4>
+                <ul class="info-list">
+                    {% for detail in treatment_plan.economic_impact.damage_details %}
+                        <li>{{ detail }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Quality Impact</h4>
+                <ul class="info-list">
+                    {% for impact in treatment_plan.economic_impact.quality_impact %}
+                        <li>{{ impact }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Life Cycle Section -->
+        <div class="section-card">
+            <h3 class="section-title">
+                <span>🐛</span> Life Cycle
+            </h3>
+            <div class="info-item">
+                <h4>Stages</h4>
+                <ul class="info-list">
+                    {% for stage in treatment_plan.life_cycle.stages %}
+                        <li>{{ stage }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Duration</h4>
+                <p>{{ treatment_plan.life_cycle.duration }}</p>
+            </div>
+            <div class="info-item">
+                <h4>Peak Activity</h4>
+                <p>{{ treatment_plan.life_cycle.peak_activity }}</p>
+            </div>
+            <div class="info-item">
+                <h4>Favorable Conditions</h4>
+                <ul class="info-list">
+                    {% for condition in treatment_plan.life_cycle.favorable_conditions %}
+                        <li>{{ condition }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Host Information Section -->
+        <div class="section-card">
+            <h3 class="section-title">
+                <span>🌾</span> Host Information
+            </h3>
+            <div class="info-item">
+                <h4>Primary Hosts</h4>
+                <ul class="info-list">
+                    {% for host in treatment_plan.host_information.primary_hosts %}
+                        <li>{{ host }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Secondary Hosts</h4>
+                <ul class="info-list">
+                    {% for host in treatment_plan.host_information.secondary_hosts %}
+                        <li>{{ host }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Vulnerable Stages</h4>
+                <ul class="info-list">
+                    {% for stage in treatment_plan.host_information.susceptible_stages %}
+                        <li>{{ stage }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Detection Section -->
+        <div class="section-card">
+            <h3 class="section-title">
+                <span>��</span> Detection & Monitoring
+            </h3>
+            <div class="info-item">
+                <h4>Early Warning Signs</h4>
+                <ul class="info-list">
+                    {% for sign in treatment_plan.detection.early_signs %}
+                        <li>{{ sign }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Scouting Guidelines</h4>
+                <ul class="info-list">
+                    {% for guideline in treatment_plan.detection.scouting_guidelines %}
+                        <li>{{ guideline }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Damage Identification</h4>
+                <ul class="info-list">
+                    {% for damage in treatment_plan.detection.damage_identification %}
+                        <li>{{ damage }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="section-card">
+            <h3 class="section-title">
+                <span>🛠</span> Management Practices
+            </h3>
+            <div class="info-item">
+                <h4>Crop Rotation</h4>
+                <ul class="info-list">
+                    {% for rotation in treatment_plan.management.crop_rotation %}
+                        <li>{{ rotation }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Planting Timing</h4>
+                <ul class="info-list">
+                    {% for timing in treatment_plan.management.planting_timing %}
+                        <li>{{ timing }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="info-item">
+                <h4>Sanitation</h4>
+                <ul class="info-list">
+                    {% for practice in treatment_plan.management.sanitation %}
+                        <li>{{ practice }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="download-section">
+        <button class="download-btn" onclick="downloadPDF()">
+            Download Detailed Report 📄
+        </button>
+    </div>
+</div>
+
+<script>
+    async function downloadPDF() {
+        try {
+            const response = await fetch('/treat/download-pdf/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    treatment_plan: {{ treatment_plan|safe }},
+                    disease_image: '{{ disease_image }}'
+                })
+            });
+            
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '{{ treatment_plan.pest_name }}_management_plan.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } else {
+                const errorData = await response.json();
+                console.error('Error downloading PDF:', errorData.error);
+                alert('Error downloading PDF: ' + errorData.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while downloading the PDF. Please try again.');
+        }
+    }
+</script>
+{% endblock %} 
