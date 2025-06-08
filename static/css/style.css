@@ -202,10 +202,6 @@ body {
 
 .card-body {
     padding: 1.5rem;
-    min-height: 180px; /* Ensure enough height for weather info */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 /* Button Styles */
@@ -441,10 +437,6 @@ body {
 
 .card-body {
     padding: 1.5rem;
-    min-height: 180px; /* Ensure enough height for weather info */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 }
 
 /* Button Styles */

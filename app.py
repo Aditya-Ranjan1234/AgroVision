@@ -319,9 +319,38 @@ def api_location():
 
 @app.route('/location_weather_page')
 def location_weather_page():
-    """Render the location and weather page."""
+    """Render the location and weather page with dynamic data."""
+    location = None
+    weather_data = None
+    groq_advice = None
+    
+    try:
+        # Get location data (calling api_location to reuse its logic for IP-based location)
+        location_response = api_location()
+        if location_response.status_code == 200:
+            location = json.loads(location_response.get_data(as_text=True))
+            
+            if location and location.get('latitude') and location.get('longitude'):
+                lat = location['latitude']
+                lon = location['longitude']
+                
+                # Get weather data
+                weather_data = get_weather(lat, lon)
+                
+                # Get farming advice
+                if weather_data:
+                    # For get_groq_advice, we need to pass weather_data and location, and potentially g.lang.
+                    # As get_groq_advice is a helper, we can call it directly.
+                    groq_advice = get_groq_advice(weather_data, location)
+                    
+    except Exception as e:
+        logger.error(f"Error fetching location, weather, or advice for location_weather_page: {e}")
+
     return render_template(
-        'location_weather_page.html',
+        'location_weather.html',
+        location=location,
+        weather_data=weather_data,
+        groq_advice=groq_advice,
         translations=translations,
         g=g
     )
@@ -699,100 +728,9 @@ def disease_detection():
 
     return render_template('disease.html', image_path=image_path, disease_result=disease_result, pest_result=pest_result, error=error, translations=translations, g=g)
 
-# Scheme Data
-schemes_data = [
-    {
-        'id': 'pm-kisan',
-        'type': 'income-support',
-        'title': 'PM-KISAN',
-        'subtitle': 'Income Support Scheme',
-        'description': 'Direct income support of ₹6,000 per year to all farmer families across the country.',
-        'features': [
-            '₹6,000 per year',
-            'Paid in 3 installments',
-            'All farmers eligible'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'pmfby',
-        'type': 'crop-insurance',
-        'title': 'PMFBY',
-        'subtitle': 'Crop Insurance Scheme',
-        'description': 'Comprehensive crop insurance scheme covering all crops and all farmers.',
-        'features': [
-            'Low premium rates',
-            'Covers all crops',
-            'Quick claim settlement'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'soil-health-card',
-        'type': 'soil-testing',
-        'title': 'Soil Health Card',
-        'subtitle': 'Soil Testing Scheme',
-        'description': 'Free soil testing and recommendations for farmers every 3 years.',
-        'features': [
-            'Free soil testing',
-            'Nutrient recommendations',
-            'Valid for 3 years'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'kcc',
-        'type': 'loan',
-        'title': 'Kisan Credit Card',
-        'subtitle': 'Credit Scheme',
-        'description': 'Simplified credit access for farmers with flexible repayment options.',
-        'features': [
-            'Low interest rates',
-            'Flexible repayment',
-            'Insurance coverage'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'micro-irrigation',
-        'type': 'subsidy',
-        'title': 'Per Drop More Crop (Micro Irrigation)',
-        'subtitle': 'Subsidy Scheme',
-        'description': 'Promotes water-use efficiency at farm level through micro irrigation (drip and sprinkler irrigation systems).',
-        'features': [
-            'Water efficiency',
-            'Drip and sprinkler systems',
-            'Government subsidy'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'paramparagat-krishi',
-        'type': 'training',
-        'title': 'Paramparagat Krishi Vikas Yojana (PKVY)',
-        'subtitle': 'Organic Farming Promotion',
-        'description': 'Promotes organic farming through cluster approach and Participatory Guarantee Systems (PGS).',
-        'features': [
-            'Organic farming promotion',
-            'Cluster approach',
-            'Certification support'
-        ],
-        'link': '#'
-    },
-    {
-        'id': 'e-nam',
-        'type': 'market-access',
-        'title': 'e-NAM',
-        'subtitle': 'Online Trading Platform',
-        'description': 'National Agriculture Market (e-NAM) is an online trading platform for agricultural commodities.',
-        'features': [
-            'Online trading',
-            'Better prices',
-            'Transparency'
-        ],
-        'link': '#'
-    }
-]
+@app.route('/get_schemes_content')
+def get_schemes_content():
+    return render_template('schemes.html')
 
 @app.route('/schemes')
 def schemes():

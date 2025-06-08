@@ -6,47 +6,62 @@
 <div class="container mt-4">
     <h2>Location & Weather</h2>
     
-    <!-- Location and Weather -->
-    <div class="row mb-4">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
+    <!-- Location Card -->
+    <div class="row mb-4 align-items-stretch">
+        <div class="col-md-6">
+            <div class="card location-weather-card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Your Location & Local Weather</h5>
+                    <h5 class="card-title mb-0">Current Location</h5>
                 </div>
                 <div class="card-body">
                     {% if location %}
                         <p><strong>Location:</strong> {{ location.city }}, {{ location.country }}</p>
                         <p><strong>Coordinates:</strong> {{ location.latitude }}, {{ location.longitude }}</p>
-                        <div id="weather-info">
-                            {% if weather_data %}
-                                <p><strong>Temperature:</strong> {{ weather_data.temp }}°C</p>
-                                <p><strong>Condition:</strong> {{ weather_data.description | capitalize }}</p>
-                                <p><strong>Humidity:</strong> {{ weather_data.humidity }}%</p>
-                                <p><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} m/s</p>
-                                <p><strong>Sunrise:</strong> {{ weather_data.sunrise }}</p>
-                                <p><strong>Sunset:</strong> {{ weather_data.sunset }}</p>
-                                <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Weather Icon">
-                            {% else %}
-                                <p class="text-muted">Could not fetch weather data.</p>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Farming Suggestions -->
-                        {% if groq_advice %}
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <h5>Farming Suggestions from AI:</h5>
-                            <p>{{ groq_advice }}</p>
-                        </div>
-                        {% endif %}
-
                     {% else %}
                         <p>Location not available. Please enable location services.</p>
-                        <div id="weather-info">
-                            <p class="text-muted">Loading weather information...</p>
-                        </div>
                     {% endif %}
                 </div>
             </div>
+        </div>
+
+        <!-- Weather Information Card -->
+        <div class="col-md-6">
+            <div class="card location-weather-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Weather Information</h5>
+                </div>
+                <div class="card-body">
+                    <div id="weather-info">
+                        {% if weather_data %}
+                            <p><strong>Temperature:</strong> <span class="temp-display">{{ weather_data.temp }}°C</span></p>
+                            <p><strong>Condition:</strong> {{ weather_data.description | capitalize }}</p>
+                            <p><strong>Humidity:</strong> {{ weather_data.humidity }}%</p>
+                            <p><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} m/s</p>
+                            <p><strong>Sunrise:</strong> {{ weather_data.sunrise }}</p>
+                            <p><strong>Sunset:</strong> {{ weather_data.sunset }}</p>
+                            <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Weather Icon" class="weather-icon-img">
+                        {% else %}
+                            <p class="text-muted">Loading weather information...</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Farming Suggestions Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            {% if groq_advice %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Agricultural Advice</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ groq_advice }}</p>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -69,4 +84,36 @@
         });
     });
 </script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Specific styles for cards on Location & Weather page */
+    .location-weather-card .card-header {
+        padding: 0.8rem 1.5rem; /* Reduced header padding */
+    }
+    .location-weather-card .card-body {
+        padding: 0.5rem; /* Further reduced padding */
+    }
+    .location-weather-card .card-body p {
+        margin-bottom: 0.2rem; /* Even further reduce spacing between paragraphs */
+        font-size: 0.9rem; /* Slightly smaller font for compactness */
+    }
+    .location-weather-card .card-body p:last-child {
+        margin-bottom: 0; /* No margin for the last paragraph */
+    }
+    .temp-display {
+        font-size: 1.8rem; /* Adjusted font for temperature to be prominent but fit */
+        font-weight: bold;
+        display: block; /* Ensure it takes its own line */
+        text-align: center; /* Center the temperature */
+        margin-bottom: 0.1rem; /* Reduced margin for temperature */
+    }
+    .weather-icon-img {
+        height: 35px; /* Further reduce height of weather icon */
+        width: auto;
+        display: block; /* Center image */
+        margin: 0.2rem auto; /* Reduced vertical margin */
+    }
+</style>
 {% endblock %} 

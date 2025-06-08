@@ -50,13 +50,13 @@
                     <a class="nav-link text-white" href="{{ url_for('location_weather_page') }}" data-key="location_weather_link">Location & Weather</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('schemes') }}" data-key="schemes_link">Agricultural Schemes</a>
+                    <a class="nav-link text-white sidebar-link" data-path="{{ url_for('get_schemes_content') }}" data-key="schemes_link">Agricultural Schemes</a>
                 </li>
             </ul>
         </nav>
 
         <!-- Main Content Area -->
-        <main role="main" class="content-area flex-grow-1">
+        <main role="main" class="content-area flex-grow-1" id="main-content-area">
             {% block content %}{% endblock %}
         </main>
     </div>
