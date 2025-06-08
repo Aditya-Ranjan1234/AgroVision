@@ -38,19 +38,19 @@
         <nav class="sidebar bg-dark-green text-white">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('index') }}" data-key="home_link">Home</a>
+                    <a class="nav-link text-white" href="{{ url_for('index') }}" data-key="home_link">{{ translations.get(g.lang, {}).get('home_link', 'Home') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('video_monitoring') }}" data-key="video_monitoring_link">Video Monitoring</a>
+                    <a class="nav-link text-white" href="{{ url_for('video_monitoring') }}" data-key="video_monitoring_link">{{ translations.get(g.lang, {}).get('video_monitoring_link', 'Video Monitoring') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('disease_detection') }}" data-key="disease_detection_link">Disease Detection</a>
+                    <a class="nav-link text-white" href="{{ url_for('disease_detection') }}" data-key="disease_detection_link">{{ translations.get(g.lang, {}).get('disease_detection_link', 'Disease Detection') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ url_for('location_weather_page') }}" data-key="location_weather_link">Location & Weather</a>
+                    <a class="nav-link text-white" href="{{ url_for('location_weather_page') }}" data-key="location_weather_link">{{ translations.get(g.lang, {}).get('location_weather_link', 'Location & Weather') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white sidebar-link" data-path="{{ url_for('get_schemes_content') }}" data-key="schemes_link">Agricultural Schemes</a>
+                    <a class="nav-link text-white sidebar-link" data-path="{{ url_for('get_schemes_content') }}" data-key="schemes_link">{{ translations.get(g.lang, {}).get('schemes_link', 'Agricultural Schemes') }}</a>
                 </li>
             </ul>
         </nav>
