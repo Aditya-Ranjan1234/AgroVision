@@ -171,6 +171,28 @@
                 min-width: 100px;
             }
         }
+
+        /* Custom styles for schemes page */
+        .btn-pagination-small {
+            padding: 5px 12px; /* Smaller padding */
+            font-size: 0.9rem; /* Smaller font size */
+        }
+
+        .pagination-controls-top {
+            margin-top: 10px; /* Adjust spacing */
+            margin-bottom: 10px; /* Adjust spacing */
+        }
+
+        .schemes-content-scrollable {
+            max-height: calc(100vh - 350px); /* Adjust based on header, search, and footer height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-bottom: 20px; /* Space below scrollable area */
+            padding-right: 10px; /* Prevent content from hiding under scrollbar */
+        }
+
+        .table {
+            margin-bottom: 0; /* Remove bottom margin from table inside scrollable div */
+        }
     </style>
 </head>
 <body>
@@ -202,25 +224,34 @@
 
         <input type="text" id="search" class="form-control mt-3" placeholder="Search scheme by name, category, or state">
 
-        <div class="table-responsive">
-            <table class="table table-bordered mt-3">
-                <thead>
-                    <tr>
-                        <th id="th-name">Scheme Name</th>
-                        <th id="th-category">Category</th>
-                        <th id="th-state">State</th>
-                        <th id="th-purpose">Purpose</th>
-                        <th id="th-apply">Apply</th>
-                    </tr>
-                </thead>
-                <tbody id="scheme-list"></tbody>
-            </table>
+        <!-- Pagination Controls (Moved to Top) -->
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-3 pagination-controls-top">
+            <button id="prev-btn" class="btn btn-secondary btn-pagination-small" disabled>Previous</button>
+            <button id="next-btn" class="btn btn-secondary btn-pagination-small">Next</button>
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="schemes-content-scrollable">
+            <div class="table-responsive">
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th id="th-name">Scheme Name</th>
+                            <th id="th-category">Category</th>
+                            <th id="th-state">State</th>
+                            <th id="th-purpose">Purpose</th>
+                            <th id="th-apply">Apply</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scheme-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Removed original pagination controls from here -->
+        <!-- <div class="d-flex justify-content-between">
             <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
             <button id="next-btn" class="btn btn-secondary">Next</button>
-        </div>
+        </div> -->
     </div>
 
 <script>
@@ -499,8 +530,8 @@
         purpose: {
             en: "Provides credit support for building cold storage, warehouses, and farm infrastructure.",
             hi: "कोल्ड स्टोरेज, वेयरहाउस और कृषि अवसंरचना निर्माण के लिए क्रेडिट सहायता प्रदान करता है।",
-            ta: "குளிர் சேமிப்பு, களஞ்சியம் மற்றும் விவசாய உள்கட்டமைப்பு உருவாக்கத்திற்கான கடன் ஆதರವನ್ನು வழங்குகிறது.",
-            te: "కొల్డ్ స్టోరేజ్, గిడ్డంగులు మరియు వ్యవసాయ మౌలిక సదుపాయాలను నిర్మించడానికి క్రెడిట్ మద్దతు అందిస్తుంది.",
+            ta: "குளிர் சேமிப்பு, களஞ்சியம் மற்றும் விவசாய உள்கட்டமைப்பு உருவாக்கத்திற்கான கடன் ஆதரவನ್ನು வழங்குகிறது.",
+            te: "కొల్డ్ స్టోరేజ్, గిడ్డంగులు మరియు వ్యవసాయ మౌలిక సదుపాయాలను నిర్మించడానికి క్రెడిట్ మద్దతు అందిస్తುంది.",
             kn: "ಕೋಲ್ಡ್ ಸ್ಟೋರೇಜ್, ಗೋದಾಮುಗಳು ಮತ್ತು ಕೃಷಿ ಮೂಲಸೌಕರ್ಯ ನಿರ್ಮಾಣಕ್ಕೆ ಕ್ರೆಡಿಟ್ ಬೆಂಬಲವನ್ನು ಒದಗಿಸುತ್ತದೆ."
         },
         link: "https://agriwelfare.gov.in"
@@ -580,7 +611,7 @@
             hi: "मिलेट प्रोत्साहन",
             ta: "கம்பு ஊக்குவிப்பு",
             te: "మిల్లెట్ ప్రోత్సాహం",
-            kn: "ಸಿರಿಧಾನ್ಯ ಪ್ರೋತ್ಸಾಹ"
+            kn: "ಸಿರಿಧಾನ್ಯ ಪ್ರೋత್ಸಾಹ"
         },
         state: {
             en: "Karnataka",
@@ -696,7 +727,7 @@
             en: "Karshaka Kshemanidhi",
             hi: "कृषक क्षेम निधि",
             ta: "கர்ஷಕ க்ஷೇಮನಿಧಿ",
-            te: "కర్షಕ క్షేమనిధి",
+            te: "కర్షక క్షేమనిధి",
             kn: "ಕೃಷಕ ಕ್ಷೇಮನಿಧಿ"
         },
         category: {
@@ -749,7 +780,7 @@
             hi: "खेतों में वर्षा जल संचयन और जल संरक्षण को बढ़ावा देता है।",
             ta: "விவசாய நிலங்களில் மழைநீர் சேகரிப்பு மற்றும் நீர் பாதுகாப்பை ஊக்குவிக்கிறது.",
             te: "పంట పొలాల్లో వర్షపు నీటి సంరక్షణ, నీటి పరిరక్షణను ప్రోత్సహిస్తుంది.",
-            kn: "ರೈತರು ತಮ್ಮ ಹೊಲಗಳಲ್ಲಿ ಮಳೆನೀರು ಸಂಗ್ರಹಣೆ ಮತ್ತು ನೀರಿನ ಸಂರಕ್ಷಣೆಯನ್ನು ಉತ್ತೇಜಿಸುತ್ತದೆ."
+            kn: "ರೈತರು ತಮ್ಮ ಹೊಲಗಳಲ್ಲಿ ಮಳೆನೀರು ಸಂಗ್ರಹಣೆ ಮತ್ತು ನೀರಿನ ಸಂರಕ్ಷಣೆಯನ್ನು ಉತ್ತೇಜಿಸುತ್ತದೆ."
         },
         link: "https://www.tn.gov.in/scheme/data_view/245"
     },

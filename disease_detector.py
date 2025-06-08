@@ -125,7 +125,7 @@ class DiseaseDetector:
                 pest_treatment_info = self._get_treatment('pest', pest_label, lang_code)
                 
                 pest_info = {
-                    'label': round(pest_confidence, 2),
+                    'label': pest_label,
                     'confidence': round(pest_confidence, 2),
                     'treatment_info': pest_treatment_info
                 }
