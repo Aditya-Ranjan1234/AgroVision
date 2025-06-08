@@ -202,6 +202,10 @@ body {
 
 .card-body {
     padding: 1.5rem;
+    min-height: 180px; /* Ensure enough height for weather info */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Button Styles */
@@ -437,6 +441,10 @@ body {
 
 .card-body {
     padding: 1.5rem;
+    min-height: 180px; /* Ensure enough height for weather info */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Button Styles */
@@ -506,6 +514,53 @@ body {
 .bg-warning .btn-outline-secondary {
     border-color: #1b5e20;
     color: #1b5e20;
+}
+
+.weather-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.weather-info .d-flex {
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.weather-info img {
+    max-width: 80px;
+    height: auto;
+    margin-right: 15px;
+    flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.weather-info h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0;
+    flex-grow: 1; /* Allow temperature to take remaining space */
+}
+
+.weather-info p {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #4a4a4a; /* Slightly darker text for readability */
+}
+
+/* Ensure the layout is good for smaller screens */
+@media (max-width: 767.98px) {
+    .location-info, .weather-info {
+        text-align: center;
+    }
+    .weather-info .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    .weather-info img {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 }
 
 

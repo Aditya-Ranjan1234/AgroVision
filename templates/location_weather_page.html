@@ -7,74 +7,129 @@
     <div class="row">
         <!-- Location Information -->
         <div class="col-md-6 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ translations.get(g.lang, {}).get('current_location', 'Current Location') }}</h5>
-                    {% if location_error %}
-                        <div class="alert alert-danger">{{ location_error }}</div>
-                    {% else %}
-                        <div class="location-info">
-                            <p><strong>City:</strong> {{ location.city }}</p>
-                            <p><strong>Country:</strong> {{ location.country }}</p>
-                            <p><strong>Coordinates:</strong> {{ location.latitude }}, {{ location.longitude }}</p>
-                        </div>
-                    {% endif %}
+                    <div id="location-info-display">
+                        <p class="text-muted">{{ translations.get(g.lang, {}).get('loading_location', 'Loading location...') }}</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Weather Information -->
         <div class="col-md-6 mb-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">{{ translations.get(g.lang, {}).get('weather_info', 'Weather Information') }}</h5>
-                    {% if weather_error %}
-                        <div class="alert alert-danger">{{ weather_error }}</div>
-                    {% elif weather_data %}
-                        <div class="weather-info">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather icon">
-                                <h3 class="mb-0 ms-3">{{ weather_data.temp }}°C</h3>
-                            </div>
-                            <p><strong>Description:</strong> {{ weather_data.description }}</p>
-                            <p><strong>Humidity:</strong> {{ weather_data.humidity }}%</p>
-                            <p><strong>Wind Speed:</strong> {{ weather_data.wind_speed }} m/s</p>
-                            <p><strong>Sunrise:</strong> {{ weather_data.sunrise }}</p>
-                            <p><strong>Sunset:</strong> {{ weather_data.sunset }}</p>
-                        </div>
-                    {% else %}
-                        <div class="alert alert-info">{{ translations.get(g.lang, {}).get('loading_weather', 'Loading weather...') }}</div>
-                    {% endif %}
+                    <div id="weather-info-display">
+                        <p class="text-muted">{{ translations.get(g.lang, {}).get('loading_weather', 'Loading weather...') }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- AI Agricultural Advice -->
-    {% if groq_advice %}
     <div class="row">
-        <div class="col-12">
-            <div class="card">
+        <div class="col-12 mb-4">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Agricultural Advice</h5>
-                    <div class="advice-content">
-                        {{ groq_advice }}
+                    <h5 class="card-title">{{ translations.get(g.lang, {}).get('agricultural_advice_heading', 'Agricultural Advice') }}</h5>
+                    <div id="groq-advice-display">
+                        <p class="text-muted">{{ translations.get(g.lang, {}).get('loading_advice', 'Loading agricultural advice...') }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Refresh weather data every 30 minutes
-    setInterval(function() {
-        window.location.reload();
-    }, 30 * 60 * 1000);
-});
+    document.addEventListener('DOMContentLoaded', function() {
+        const locationInfoDisplay = document.getElementById('location-info-display');
+        const weatherInfoDisplay = document.getElementById('weather-info-display');
+        const groqAdviceDisplay = document.getElementById('groq-advice-display');
+
+        async function fetchLocationAndWeather() {
+            try {
+                // Fetch Location
+                const locationResponse = await fetch('/api/location');
+                if (!locationResponse.ok) {
+                    throw new Error(`HTTP error! status: ${locationResponse.status}`);
+                }
+                const locationData = await locationResponse.json();
+
+                if (locationData.latitude && locationData.longitude) {
+                    locationInfoDisplay.innerHTML = `
+                        <p><strong>{{ translations.get(g.lang, {}).get('city', 'City') }}:</strong> ${locationData.city}</p>
+                        <p><strong>{{ translations.get(g.lang, {}).get('country', 'Country') }}:</strong> ${locationData.country}</p>
+                        <p><strong>{{ translations.get(g.lang, {}).get('coordinates', 'Coordinates') }}:</strong> ${locationData.latitude}, ${locationData.longitude}</p>
+                    `;
+
+                    // Fetch Weather
+                    const weatherResponse = await fetch('/api/weather', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ lat: locationData.latitude, lon: locationData.longitude }),
+                    });
+
+                    if (!weatherResponse.ok) {
+                        throw new Error(`HTTP error! status: ${weatherResponse.status}`);
+                    }
+                    const weatherData = await weatherResponse.json();
+
+                    weatherInfoDisplay.innerHTML = `
+                        <div class="weather-info">
+                            <div class="d-flex align-items-center mb-3">
+                                ${weatherData.icon ? `<img src="http://openweathermap.org/img/wn/${weatherData.icon}@2x.png" alt="Weather icon" style="width: 60px; height: 60px;">` : `<i class="fas fa-cloud-sun fa-3x text-info"></i>`}
+                                <h3 class="mb-0 ms-3">${weatherData.temp}°C</h3>
+                            </div>
+                            <p><strong>{{ translations.get(g.lang, {}).get('description', 'Description') }}:</strong> ${weatherData.description || 'N/A'}</p>
+                            <p><strong>{{ translations.get(g.lang, {}).get('humidity', 'Humidity') }}:</strong> ${weatherData.humidity}%</p>
+                            <p><strong>{{ translations.get(g.lang, {}).get('wind_speed', 'Wind Speed') }}:</strong> ${weatherData.wind_speed} m/s</p>
+                            <p><strong>{{ translations.get(g.lang, {}).get('sunrise', 'Sunrise') }}:</strong> ${weatherData.sunrise}</p>
+                            <p><strong>{{ translations.get(g.lang, {}).get('sunset', 'Sunset') }}:</strong> ${weatherData.sunset}</p>
+                        </div>
+                    `;
+
+                    // Fetch Agricultural Advice (assuming a new API endpoint for this)
+                    const adviceResponse = await fetch('/api/advice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ weather: weatherData, location: locationData, lang: '{{ g.lang }}' }),
+                    });
+                    if (!adviceResponse.ok) {
+                        throw new Error(`HTTP error! status: ${adviceResponse.status}`);
+                    }
+                    const adviceData = await adviceResponse.json();
+                    groqAdviceDisplay.innerHTML = `<div class="advice-content">${adviceData.advice}</div>`;
+
+                } else {
+                    locationInfoDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('location_error', 'Error getting location.') }}</div>`;
+                    weatherInfoDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('weather_error', 'Error fetching weather data.') }}</div>`;
+                    groqAdviceDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('groq_error', 'AI advice unavailable.') }}</div>`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching location/weather/advice:', error);
+                locationInfoDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('location_error', 'Error getting location.') }}</div>`;
+                weatherInfoDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('weather_error', 'Error fetching weather data.') }}</div>`;
+                groqAdviceDisplay.innerHTML = `<div class="alert alert-danger">{{ translations.get(g.lang, {}).get('groq_error', 'AI advice unavailable.') }}</div>`;
+            }
+        }
+
+        // Initial fetch on page load
+        fetchLocationAndWeather();
+
+        // Refresh weather data every 30 minutes (1800000 milliseconds)
+        setInterval(fetchLocationAndWeather, 1800000);
+    });
 </script>
 {% endblock %} 

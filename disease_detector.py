@@ -125,32 +125,17 @@ class DiseaseDetector:
                 pest_treatment_info = self._get_treatment('pest', pest_label, lang_code)
                 
                 pest_info = {
-                    'label': pest_label,
+                    'label': round(pest_confidence, 2),
                     'confidence': round(pest_confidence, 2),
                     'treatment_info': pest_treatment_info
                 }
             else:
                 logger.warning("Pest model not loaded. Skipping pest prediction.")
             
-            # Combine results for display
-            # Prioritize disease info, but include pest info in description
-            combined_description = f"Disease: {disease_info['label']} ({disease_info['confidence']:.2f}% Confidence). " \
-                                   f"Pest: {pest_info['label']} ({pest_info['confidence']:.2f}% Confidence)."
-
-            severity = "info"
-            if "healthy" not in disease_info['label'].lower() or "no disease" not in disease_info['label'].lower():
-                severity = "danger" # Indicate a problem if a specific disease is found
-            elif "healthy" not in pest_info['label'].lower() or "no pest" not in pest_info['label'].lower():
-                severity = "warning" # Indicate a problem if a specific pest is found
-            
+            # Return separate results for disease and pest
             return {
-                'disease': disease_info['label'],
-                'description': combined_description,
-                'treatment': disease_info['treatment_info']['treatment'],
-                'symptoms': disease_info['treatment_info']['symptoms'],
-                'causes': disease_info['treatment_info']['causes'],
-                'prevention': disease_info['treatment_info']['prevention'],
-                'severity': severity,
+                'disease_result': disease_info,
+                'pest_result': pest_info,
                 'image_path': image_static_url
             }
 

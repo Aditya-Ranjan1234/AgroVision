@@ -292,30 +292,39 @@ def set_language_route(lang_code):
     session['lang'] = lang_code
     return redirect(request.referrer or url_for('index'))
 
-def get_location():
-    """Get user's location automatically using IP geolocation"""
+@app.route('/api/location')
+def api_location():
+    """API endpoint to get user's location automatically using IP geolocation"""
     try:
-        # Try to get location from IP
         response = requests.get('https://ipapi.co/json/', timeout=5)
         if response.status_code == 200:
             data = response.json()
             logger.info(f"Location data received: {data}")
-            return {
+            return jsonify({
                 'latitude': data['latitude'],
                 'longitude': data['longitude'],
                 'city': data['city'],
                 'country': data['country_name']
-            }
+            })
     except Exception as e:
         logger.error(f"Error getting location from IP: {str(e)}")
     
-    # Fallback to default location (you can change these coordinates)
-    return {
+    # Fallback to default location
+    return jsonify({
         'latitude': 20.5937,  # Default to India's center
         'longitude': 78.9629,
         'city': 'Default City',
         'country': 'India'
-    }
+    })
+
+@app.route('/location_weather_page')
+def location_weather_page():
+    """Render the location and weather page."""
+    return render_template(
+        'location_weather_page.html',
+        translations=translations,
+        g=g
+    )
 
 def get_weather(lat, lon):
     """Get weather data from OpenWeatherMap API"""
@@ -377,6 +386,30 @@ def api_weather():
     if weather_data is None:
         return jsonify({'error': 'Could not fetch weather data'}), 500
     return jsonify(weather_data)
+
+@app.route('/api/advice', methods=['POST'])
+def api_advice():
+    data = request.get_json()
+    weather_data = data.get('weather')
+    location_data = data.get('location')
+    lang_code = data.get('lang', 'en')
+
+    if not weather_data or not location_data:
+        return jsonify({'error': 'Weather and location data are required'}), 400
+
+    # Temporarily set g.lang for get_groq_advice to use the requested language
+    original_g_lang = getattr(g, 'lang', 'en') # Store original if exists
+    g.lang = lang_code # Set g.lang for this request
+
+    try:
+        advice = get_groq_advice(weather_data, location_data)
+        return jsonify({'advice': advice})
+    except Exception as e:
+        logger.error(f"Error in api_advice: {e}")
+        return jsonify({'error': translations.get(lang_code, {}).get('groq_error', 'Could not fetch AI advice.')}), 500
+    finally:
+        # Restore original g.lang
+        g.lang = original_g_lang
 
 @app.route('/api/alerts')
 def get_alerts():
@@ -528,35 +561,6 @@ def index():
     """Render the landing page."""
     return render_template('index.html', translations=translations, g=g)
 
-@app.route('/location_weather_page')
-def location_weather_page():
-    """Render the location and weather page."""
-    location_data = get_location()
-    weather_data = None
-    groq_advice = None
-    location_error = None
-    weather_error = None
-
-    if location_data and location_data['latitude'] and location_data['longitude']:
-        lat = location_data['latitude']
-        lon = location_data['longitude']
-        weather_data = get_weather(lat, lon)
-        if weather_data:
-            groq_advice = get_groq_advice(weather_data, location_data)
-        else:
-            weather_error = translations.get(g.lang, {}).get('weather_error', 'Error fetching weather data.')
-    else:
-        location_error = translations.get(g.lang, {}).get('location_error', 'Error getting location.')
-
-    return render_template('location_weather_page.html',
-                           location=location_data,
-                           weather_data=weather_data,
-                           groq_advice=groq_advice,
-                           location_error=location_error,
-                           weather_error=weather_error,
-                           translations=translations,
-                           g=g)
-
 def get_groq_advice(weather, location):
     logger.info(f"Attempting to get Groq advice for weather: {weather}, location: {location}")
     if not groq_client:
@@ -649,7 +653,8 @@ def video_monitoring():
 @app.route('/disease', methods=['GET', 'POST'])
 def disease_detection():
     image_path = None
-    results = None
+    disease_result = None
+    pest_result = None
     error = None
 
     if request.method == 'POST':
@@ -679,18 +684,119 @@ def disease_detection():
                 image_path = url_for('static', filename=f'uploads/{unique_filename}')
 
                 if disease_detector:
-                    results = disease_detector.detect_disease(image_bytes, lang_code=g.lang) # Pass image bytes and language code
+                    detection_results = disease_detector.detect_disease(image_bytes, lang_code=g.lang) # Get separate results
+                    if detection_results:
+                        disease_result = detection_results.get('disease_result')
+                        pest_result = detection_results.get('pest_result')
+                        image_path = detection_results.get('image_path')
+                    else:
+                        error = translations.get(g.lang, {}).get('detection_failed_error', "Disease and pest detection failed.")
                 else:
                     error = translations.get(g.lang, {}).get('disease_detector_not_initialized_error', "Disease detector not initialized.")
     else:
         # For GET requests, ensure results and image_path are reset or handled as empty
         pass # No change needed, already defaults to None
 
-    return render_template('disease.html', image_path=image_path, results=results, error=error, translations=translations, g=g)
+    return render_template('disease.html', image_path=image_path, disease_result=disease_result, pest_result=pest_result, error=error, translations=translations, g=g)
+
+# Scheme Data
+schemes_data = [
+    {
+        'id': 'pm-kisan',
+        'type': 'income-support',
+        'title': 'PM-KISAN',
+        'subtitle': 'Income Support Scheme',
+        'description': 'Direct income support of ₹6,000 per year to all farmer families across the country.',
+        'features': [
+            '₹6,000 per year',
+            'Paid in 3 installments',
+            'All farmers eligible'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'pmfby',
+        'type': 'crop-insurance',
+        'title': 'PMFBY',
+        'subtitle': 'Crop Insurance Scheme',
+        'description': 'Comprehensive crop insurance scheme covering all crops and all farmers.',
+        'features': [
+            'Low premium rates',
+            'Covers all crops',
+            'Quick claim settlement'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'soil-health-card',
+        'type': 'soil-testing',
+        'title': 'Soil Health Card',
+        'subtitle': 'Soil Testing Scheme',
+        'description': 'Free soil testing and recommendations for farmers every 3 years.',
+        'features': [
+            'Free soil testing',
+            'Nutrient recommendations',
+            'Valid for 3 years'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'kcc',
+        'type': 'loan',
+        'title': 'Kisan Credit Card',
+        'subtitle': 'Credit Scheme',
+        'description': 'Simplified credit access for farmers with flexible repayment options.',
+        'features': [
+            'Low interest rates',
+            'Flexible repayment',
+            'Insurance coverage'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'micro-irrigation',
+        'type': 'subsidy',
+        'title': 'Per Drop More Crop (Micro Irrigation)',
+        'subtitle': 'Subsidy Scheme',
+        'description': 'Promotes water-use efficiency at farm level through micro irrigation (drip and sprinkler irrigation systems).',
+        'features': [
+            'Water efficiency',
+            'Drip and sprinkler systems',
+            'Government subsidy'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'paramparagat-krishi',
+        'type': 'training',
+        'title': 'Paramparagat Krishi Vikas Yojana (PKVY)',
+        'subtitle': 'Organic Farming Promotion',
+        'description': 'Promotes organic farming through cluster approach and Participatory Guarantee Systems (PGS).',
+        'features': [
+            'Organic farming promotion',
+            'Cluster approach',
+            'Certification support'
+        ],
+        'link': '#'
+    },
+    {
+        'id': 'e-nam',
+        'type': 'market-access',
+        'title': 'e-NAM',
+        'subtitle': 'Online Trading Platform',
+        'description': 'National Agriculture Market (e-NAM) is an online trading platform for agricultural commodities.',
+        'features': [
+            'Online trading',
+            'Better prices',
+            'Transparency'
+        ],
+        'link': '#'
+    }
+]
 
 @app.route('/schemes')
 def schemes():
-    return render_template('scheme.html', translations=translations, g=g)
+    return render_template('schemes.html')
 
 # Socket.IO event handlers
 @socketio.on('connect')

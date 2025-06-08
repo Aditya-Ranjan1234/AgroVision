@@ -43,73 +43,23 @@
         <div class="col-md-9">
             <!-- Scheme Cards -->
             <div class="row">
-                <!-- PM-KISAN -->
+                {% for scheme in schemes %}
                 <div class="col-md-6 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">PM-KISAN</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Income Support Scheme</h6>
-                            <p class="card-text">Direct income support of ₹6,000 per year to all farmer families across the country.</p>
+                            <h5 class="card-title">{{ scheme.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ scheme.subtitle }}</h6>
+                            <p class="card-text">{{ scheme.description }}</p>
                             <ul class="list-unstyled">
-                                <li><i class="fas fa-check-circle text-success"></i> ₹6,000 per year</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Paid in 3 installments</li>
-                                <li><i class="fas fa-check-circle text-success"></i> All farmers eligible</li>
+                                {% for feature in scheme.features %}
+                                <li><i class="fas fa-check-circle text-success"></i> {{ feature }}</li>
+                                {% endfor %}
                             </ul>
-                            <a href="#" class="btn btn-primary">Learn More</a>
+                            <a href="{{ scheme.link }}" class="btn btn-primary">Learn More</a>
                         </div>
                     </div>
                 </div>
-
-                <!-- PMFBY -->
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">PMFBY</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Crop Insurance Scheme</h6>
-                            <p class="card-text">Comprehensive crop insurance scheme covering all crops and all farmers.</p>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check-circle text-success"></i> Low premium rates</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Covers all crops</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Quick claim settlement</li>
-                            </ul>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Soil Health Card -->
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Soil Health Card</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Soil Testing Scheme</h6>
-                            <p class="card-text">Free soil testing and recommendations for farmers every 3 years.</p>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check-circle text-success"></i> Free soil testing</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Nutrient recommendations</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Valid for 3 years</li>
-                            </ul>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- KCC -->
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">Kisan Credit Card</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Credit Scheme</h6>
-                            <p class="card-text">Simplified credit access for farmers with flexible repayment options.</p>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check-circle text-success"></i> Low interest rates</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Flexible repayment</li>
-                                <li><i class="fas fa-check-circle text-success"></i> Insurance coverage</li>
-                            </ul>
-                            <a href="#" class="btn btn-primary">Learn More</a>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
