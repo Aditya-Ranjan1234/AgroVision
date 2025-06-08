@@ -1,30 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Agriculture Vigilance System{% endblock %}
+{% block title %}{{ translations.get(g.lang, {}).get('home_title', 'Agriculture Vigilance System') }}{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="p-4 mb-4 bg-light rounded-3">
         <div class="container-fluid py-4">
-            <h1 class="display-5 fw-bold">Welcome to Agriculture Vigilance System{% if location %} in {{ location.city }}, {{ location.country }}{% endif %}</h1>
-            <p class="col-md-8 fs-4">Your comprehensive solution for modern agriculture. Monitor your farm, detect diseases, get AI-powered advice, and stay informed with real-time weather updates.</p>
-            <a href="{{ url_for('location_weather_page') }}" class="btn btn-secondary btn-lg ms-2" type="button">Check Location & Weather</a>
+            <h1 class="display-5 fw-bold">{{ translations.get(g.lang, {}).get('welcome_message', 'Welcome to Agriculture Vigilance System') }}{% if location %} {{ translations.get(g.lang, {}).get('in_location', 'in') }} {{ location.city }}, {{ location.country }}{% endif %}</h1>
+            <p class="col-md-8 fs-4">{{ translations.get(g.lang, {}).get('welcome_description', 'Your comprehensive solution for modern agriculture. Monitor your farm, detect diseases, get AI-powered advice, and stay informed with real-time weather updates.') }}</p>
+            <a href="{{ url_for('location_weather_page') }}" class="btn btn-secondary btn-lg ms-2" type="button">{{ translations.get(g.lang, {}).get('check_location_weather', 'Check Location & Weather') }}</a>
         </div>
     </div>
 
     <div class="row align-items-md-stretch">
         <div class="col-md-6 mb-4">
             <div class="h-100 p-5 text-white bg-success rounded-3">
-                <h2>Video Monitoring</h2>
-                <p>Keep a close eye on your farm with real-time video feeds and automated anomaly detection.</p>
-                <a href="{{ url_for('video_monitoring') }}" class="btn btn-outline-light">View Feeds</a>
+                <h2>{{ translations.get(g.lang, {}).get('video_monitoring_title', 'Video Monitoring') }}</h2>
+                <p>{{ translations.get(g.lang, {}).get('video_monitoring_description', 'Keep a close eye on your farm with real-time video feeds and automated anomaly detection.') }}</p>
+                <a href="{{ url_for('video_monitoring') }}" class="btn btn-outline-light">{{ translations.get(g.lang, {}).get('view_feeds', 'View Feeds') }}</a>
             </div>
         </div>
         <div class="col-md-6 mb-4">
             <div class="h-100 p-5 bg-warning border rounded-3">
-                <h2>Disease & Pest Detection</h2>
-                <p>Upload plant images for quick and accurate disease and pest identification and treatment recommendations.</p>
-                <a href="{{ url_for('disease_detection') }}" class="btn btn-outline-secondary">Analyze Image</a>
+                <h2>{{ translations.get(g.lang, {}).get('disease_pest_detection_title', 'Disease & Pest Detection') }}</h2>
+                <p>{{ translations.get(g.lang, {}).get('disease_pest_detection_description', 'Upload plant images for quick and accurate disease and pest identification and treatment recommendations.') }}</p>
+                <a href="{{ url_for('disease_detection') }}" class="btn btn-outline-secondary">{{ translations.get(g.lang, {}).get('analyze_image', 'Analyze Image') }}</a>
             </div>
         </div>
     </div>

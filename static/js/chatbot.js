@@ -76,18 +76,30 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 const reader = response.body.getReader();
                 let responseText = '';
+                let assistantMessageDiv = null; // To hold the reference to the streaming message
                 
                 function readStream() {
                     return reader.read().then(({done, value}) => {
                         if (done) {
-                            addMessage('assistant', responseText);
-                            // Convert response to speech and play
+                            // Removed: addMessage('assistant', responseText); to prevent duplication
+                            // The streaming updates should have already shown the final text
+                            
+                            let finalContent = responseText;
+                            // Check for the translation marker
+                            if (responseText.startsWith('__FINAL_TRANSLATION__:')) {
+                                finalContent = responseText.substring('__FINAL_TRANSLATION__:'.length);
+                                if (assistantMessageDiv) {
+                                    assistantMessageDiv.querySelector('.message-content').textContent = finalContent;
+                                }
+                            }
+
+                            // Convert final response to speech and play
                             fetch('/text-to-speech', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
                                 },
-                                body: JSON.stringify({ text: responseText })
+                                body: JSON.stringify({ text: finalContent })
                             })
                             .then(response => response.blob())
                             .then(blob => {
@@ -98,8 +110,25 @@ document.addEventListener('DOMContentLoaded', function() {
                             .catch(error => console.error('Error playing audio:', error));
                             return;
                         }
-                        responseText += new TextDecoder().decode(value);
-                        addMessage('assistant', responseText, true); // Update streaming message
+                        const chunk = new TextDecoder().decode(value);
+                        responseText += chunk;
+
+                        if (!assistantMessageDiv) {
+                            // If this is the first chunk, create the message div
+                            assistantMessageDiv = document.createElement('div');
+                            assistantMessageDiv.className = 'message assistant-message mb-2';
+                            
+                            const messageContent = document.createElement('div');
+                            messageContent.className = 'message-content';
+                            messageContent.textContent = responseText; // Set initial content
+                            
+                            assistantMessageDiv.appendChild(messageContent);
+                            chatMessages.appendChild(assistantMessageDiv);
+                        } else {
+                            // Otherwise, update the content of the existing message
+                            assistantMessageDiv.querySelector('.message-content').textContent = responseText;
+                        }
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
                         return readStream();
                     });
                 }

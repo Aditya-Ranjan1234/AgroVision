@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Government Subsidies & Schemes for Farmers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #e0ffe0 0%, #f0fff0 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .govt-logo {
+            display: block;
+            margin: 24px auto 0 auto;
+            width: 80px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.08));
+        }
+        .container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 5vw 24px 5vw;
+            margin: 36px auto 36px auto;
+            max-width: 1200px;
+            width: 95vw;
+        }
+        h2#title {
+            font-weight: 700;
+            color: #226d1b;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+            font-size: 2rem;
+            text-align: center;
+        }
+        .alert-info {
+            background: #eafbe7;
+            border: 1px solid #b6e2b6;
+            color: #226d1b;
+            font-size: 1.08rem;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            padding: 14px 18px;
+        }
+        #search {
+            border-radius: 8px;
+            border: 1px solid #b6e2b6;
+            padding: 12px 16px;
+            font-size: 1.08rem;
+            margin-bottom: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 8px rgba(34,109,27,0.04);
+            transition: border-color 0.2s;
+        }
+        #search:focus {
+            border-color: #226d1b;
+            outline: none;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .table {
+            background: #f8fff8;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(34,109,27,0.05);
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        .table th, .table td {
+            vertical-align: middle !important;
+            text-align: center;
+            padding: 14px 10px;
+            font-size: 1.05rem;
+            min-width: 120px;
+        }
+        .table th {
+            background: #226d1b;
+            color: #fff;
+            font-weight: 600;
+            border-bottom: 2px solid #b6e2b6;
+            white-space: nowrap;
+        }
+        .table tbody tr {
+            transition: background 0.2s;
+        }
+        .table tbody tr:hover {
+            background-color: #eafbe7 !important;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #226d1b;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 18px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background: #1a4e13 !important;
+            color: #fff !important;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #eafbe7;
+            color: #226d1b;
+            border: 1px solid #b6e2b6;
+            border-radius: 6px;
+            padding: 7px 18px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover, .btn-secondary:focus {
+            background: #d2f5c9;
+            color: #1a4e13;
+            transform: translateY(-1px);
+        }
+        .btn-secondary:disabled {
+            background: #f0f0f0;
+            color: #999;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+        select.form-select {
+            border-radius: 6px;
+            border: 1px solid #b6e2b6;
+            padding: 6px 12px;
+            font-size: 1rem;
+            background: #f8fff8;
+            color: #226d1b;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        select.form-select:focus {
+            border-color: #226d1b;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(34,109,27,0.1);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            h2#title {
+                font-size: 1.5rem;
+            }
+            .table th, .table td {
+                font-size: 0.9rem;
+                padding: 8px 4px;
+                min-width: 100px;
+            }
+            .btn-primary, .btn-secondary {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            .alert-info {
+                font-size: 0.95rem;
+                padding: 12px;
+            }
+            #search {
+                font-size: 0.95rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid bg-light py-2">
+        <a href="/" class="btn btn-secondary ms-3 mt-2">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+    <img src="https://www.india.gov.in/sites/upload_files/npi/files/national-symbols_0.png" class="govt-logo" alt="Indian Government Emblem">
+
+    <div class="container mt-4">
+        <h2 id="title" class="text-center">
+            Government Subsidies & Schemes for Farmers | 
+            किसानों के लिए सरकारी सब्सिडी और योजनाएँ 
+        </h2>
+
+        <div class="d-flex justify-content-end" style="margin-bottom: 10px;">
+            <label for="language" class="me-2"><b>Language:</b></label>
+            <select id="language" class="form-select w-auto">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <!-- <option value="ml">മലയാളം</option>
+                <option value="mr">मराठी</option>
+                <option value="bn">বাংলা</option> -->
+            </select>
+        </div>
+
+        <div class="alert alert-info mt-3" id="description">
+            Welcome to the Government Subsidies & Schemes Portal, where farmers can access the latest benefits, financial aid, and agricultural schemes provided by the central and state governments. Our goal is to help you find the right support to enhance productivity and ensure a sustainable future in farming.
+        </div>
+
+        <input type="text" id="search" class="form-control mt-3" placeholder="Search scheme by name, category, or state">
+
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th id="th-name">Scheme Name</th>
+                        <th id="th-category">Category</th>
+                        <th id="th-state">State</th>
+                        <th id="th-purpose">Purpose</th>
+                        <th id="th-apply">Apply</th>
+                    </tr>
+                </thead>
+                <tbody id="scheme-list"></tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+            <button id="next-btn" class="btn btn-secondary">Next</button>
+        </div>
+    </div>
+
+<script>
+    const perPage = 10;
+    let currentPage = 1;
+    let currentLang = "en";
+    let filteredSchemes = [];
+
+    const translations = {
+        en: {
+            title: "Government Subsidies & Schemes for Farmers",
+            description: "This portal provides farmers with the latest government subsidies and schemes across India.",
+            searchPlaceholder: "Search scheme by name, category, or state",
+            thName: "Scheme Name",
+            thCategory: "Category",
+            thState: "State",
+            thPurpose: "Purpose",
+            thApply: "Apply",
+            applyNow: "Apply Now"
+        },
+        hi: {
+            title: "किसानों के लिए सरकारी सब्सिडी और योजनाएँ",
+            description: "यह पोर्टल किसानों को नवीनतम सरकारी सब्सिडी और योजनाओं की जानकारी प्रदान करता है।",
+            searchPlaceholder: "योजना का नाम, श्रेणी या राज्य खोजें",
+            thName: "योजना का नाम",
+            thCategory: "श्रेणी",
+            thState: "राज्य",
+            thPurpose: "उद्देश्य",
+            thApply: "आवेदन करें",
+            applyNow: "अभी आवेदन करें"
+        },
+        ta: {
+            title: "விவசாயிகளுக்கான அரசு மானியங்கள் மற்றும் திட்டங்கள்",
+            description: "இந்த போர்டல் இந்தியாவின் விவசாயிகளுக்கான சமீபத்திய அரசு மானியங்கள் மற்றும் திட்டங்களை வழங்குகிறது.",
+            searchPlaceholder: "திட்டத்தின் பெயர், வகை, மாநிலம் மூலம் தேடவும்",
+            thName: "திட்டத்தின் பெயர்",
+            thCategory: "வகை",
+            thState: "மாநிலம்",
+            thPurpose: "நோக்கம்",
+            thApply: "விண்ணப்பிக்க",
+            applyNow: "இப்போது விண்ணப்பிக்கவும்"
+        },
+        te: {
+            title: "రైతుల కోసం ప్రభుత్వ సబ్సిడీలు & పథకాలు",
+            description: "ఈ పోర్టల్ భారతదేశంలోని రైతులకు తాజా ప్రభుత్వ సబ్సిడీలు మరియు పథకాలను అందిస్తుంది.",
+            searchPlaceholder: "పథకం పేరు, వర్గం లేదా రాష్ట్రం ద్వారా వెతకండి",
+            thName: "పథకం పేరు",
+            thCategory: "వర్గం",
+            thState: "రాష్ట్రం",
+            thPurpose: "ఉద్దేశ్యం",
+            thApply: "అప్లై చేయండి",
+            applyNow: "ఇప్పుడు అప్లై చేయండి"
+        },
+        "kn": {
+        title: "ರೈತರಿಗೆ ಸರ್ಕಾರದ ಸಬ್ಸಿಡಿಗಳು ಮತ್ತು ಯೋಜನೆಗಳು",
+        description: "ಈ ಪೋರ್ಟಲ್ ಭಾರತದಲ್ಲಿನ ರೈತರಿಗೆ ಇತ್ತೀಚಿನ ಸರ್ಕಾರದ ಸಬ್ಸಿಡಿಗಳು ಮತ್ತು ಯೋಜನೆಗಳನ್ನು ಒದಗಿಸುತ್ತದೆ.",
+        searchPlaceholder: "ಯೋಜನೆಯ ಹೆಸರು, ವರ್ಗ ಅಥವಾ ರಾಜ್ಯದ ಮೂಲಕ ಹುಡುಕಿ",
+        thName: "ಯೋಜನೆಯ ಹೆಸರು",
+        thCategory: "ವರ್ಗ",
+        thState: "ರಾಜ್ಯ",
+        thPurpose: "ಉದ್ದೇಶ",
+        thApply: "ಅರ್ಜಿಸಿ",
+        applyNow: "ಈಗ ಅರ್ಜಿ ಹಾಕಿ"
+    }
+    };
+
+    const schemes = [
+    {
+        name: {
+            en: "Soil Health Card Scheme",
+            hi: "मृदा स्वास्थ्य कार्ड योजना",
+            ta: "மண்ணின் ஆரோக்கிய அட்டை திட்டம்",
+            te: "మట్టి ఆరోగ్య కార్డ్ పథకం",
+            kn: "ಮಣ್ಣು ಆರೋಗ್ಯ ಕಾರ್ಡ್ ಯೋಜನೆ"
+        },
+        category: {
+            en: "Soil Health",
+            hi: "मृदा स्वास्थ्य",
+            ta: "மண் ஆரோக்கியம்",
+            te: "మట్టి ఆరోగ్యం",
+            kn: "ಮಣ್ಣು ಆರೋಗ್ಯ"
+        },
+        state: {
+            en: "India",
+            hi: "भारत",
+            ta: "இந்தியா",
+            te: "భారతదేశం",
+            kn: "ಭಾರತ"
+        },
+        purpose: {
+            en: "Helps farmers understand soil nutrient levels and recommends fertilizers to improve yield.",
+            hi: "किसानों को मिट्टी के पोषक स्तर को समझने और पैदावार बढ़ाने के लिए उर्वरकों की सिफारिश करने में मदद करता है।",
+            ta: "விவசாயிகள் மண்ணின் ஊட்டச்சத்து அளவைப் புரிந்துகொண்டு உற்பத்தியை மேம்படுத்த உரங்களை பரிந்துரைக்க உதவுகிறது.",
+            te: "రైతులు మట్టిలోని పోషక స్థాయిలను అర్థం చేసుకోవడానికి మరియు దిగుబడిని మెరుగుపరిచేందుకు ఎరువులను సిఫారసు చేయడానికి సహాయపడుతుంది.",
+            kn: "ರೈತರು ಮಣ್ಣಿನ ಪೋಷಕಾಂಶ ಮಟ್ಟವನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಉತ್ಪಾದನೆ ಹೆಚ್ಚಿಸಲು ರಸಗೊಬ್ಬರಗಳನ್ನು ಶಿಫಾರಸು ಮಾಡಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+        },
+        link: "https://soilhealth.dac.gov.in"
+    },
+    {
+        name: {
+            en: "Fertilizer Subsidy",
+            hi: "उर्वरक सब्सिडी",
+            ta: "உரங்கள் மானியம்",
+            te: "ఎరువుల అనుబంధం",
+            kn: "ರಸಗೊಬ್ಬರ ಅನುದಾನ"
+        },
+        category: {
+            en: "Fertilizer",
+            hi: "उर्वरक",
+            ta: "உரங்கள்",
+            te: "ఎరువులు",
+            kn: "ರಸಗೊಬ್ಬರು"
+        },
+        state: {
+            en: "India",
+            hi: "भारत",
+            ta: "இந்தியா",
+            te: "భారతదేశం",
+            kn: "ಭಾರತ"
+        },
+        purpose: {
+            en: "Offers subsidies on urea and non-urea fertilizers to reduce farming costs and improve productivity.",
+            hi: "कृषि लागत को कम करने और उत्पादकता बढ़ाने के लिए यूरिया और गैर-यूरिया उर्वरकों पर सब्सिडी प्रदान की जाती है।",
+            ta: "விவசாய செலவை குறைக்கும் மற்றும் உற்பத்தியை மேம்படுத்த யூரியா மற்றும் யூரியா அல்லாத உரங்களில் மானியம் வழங்கப்படுகிறது.",
+            te: "వ్యవసాయ ఖర్చులను తగ్గించేందుకు మరియు ఉత్పాదకతను మెరుగుపరచడానికి యూరియా మరియు యూరియా కాని ఎరువులపై అనుబంధం అందించబడుతుంది.",
+            kn: "ಯೂರಿಯಾ ಮತ್ತು ಯೂರಿಯಾ ಅಲ್ಲದ ರಸಗೊಬ್ಬರಗಳ ಮೇಲೆ ಅನುದಾನವನ್ನು ನೀಡಲಾಗುತ್ತದೆ, ಇದರಿಂದ ಕೃಷಿ ವೆಚ್ಚ ಕಡಿಮೆಯಾಗುತ್ತದೆ ಮತ್ತು ಉತ್ಪಾದಕತೆ ಹೆಚ್ಚುತ್ತದೆ."
+        },
+        link: "https://fert.nic.in"
+    },
+    {
+        name: {
+            en: "Kisan Credit Card (KCC)",
+            hi: "किसान क्रेडिट कार्ड (KCC)",
+            ta: "கிசான் கடன் அட்டை (KCC)",
+            te: "కిసాన్ క్రెడిట్ కార్డ్ (KCC)",
+            kn: "ಕಿಸಾನ್ ಕ್ರೆಡಿಟ್ ಕಾರ್ಡ್ (KCC)"
+        },
+        category: {
+            en: "Loan & Credit",
+            hi: "ऋण और क्रेडिट",
+            ta: "கடன் & நாணயம்",
+            te: "ఋణం & క్రెడిట్",
+            kn: "ಸಾಲ ಮತ್ತು ಕ್ರೆಡಿಟ್"
+        },
+        state: {
+            en: "India",
+            hi: "भारत",
+            ta: "இந்தியா",
+            te: "భారతదేశం",
+            kn: "ಭಾರತ"
+        },
+        purpose: {
+            en: "Offers easy access to credit for farmers at low interest rates for purchasing seeds, fertilizers, and equipment.",
+            hi: "किसानों को बीज, उर्वरक और उपकरण खरीदने के लिए कम ब्याज दरों पर क्रेडिट की आसान पहुंच प्रदान करता है।",
+            ta: "விவசாயிகள் குறைந்த வட்டி விகிதத்தில் கடன் பெறுவதற்கான வசதியளிக்கிறது.",
+            te: "వ్యవసాయదారులకు తక్కువ వడ్డీ రేట్లపై విత్తనాలు, ఎరువులు, పరికరాలు కొనుగోలు చేయడానికి సులభమైన క్రెడిట్‌ను అందిస్తుంది.",
+            kn: "ರೈತರಿಗೆ ಕಡಿಮೆ ಬಡ್ಡಿದರದಲ್ಲಿ ಬೀಜಗಳು, ರಸಗೊಬ್ಬರು ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಖರೀದಿಸಲು ಕ್ರೆಡಿಟ್ ಪಡೆಯಲು ಸುಲಭವಾದ ಅವಕಾಶವನ್ನು ಒದಗಿಸುತ್ತದೆ."
+        },
+        link: "https://www.nabard.org"
+    },
+    {
+        name: {
+            en: "Subsidy on Seeds",
+            hi: "बीजों पर सब्सिडी",
+            ta: "விதைகள் மீது மானியம்",
+            te: "విత్తనాలపై సబ్సిడీ",
+            kn: "ಬೀಜಗಳ ಮೇಲೆ ಅನುದಾನ"
+        },
+        category: {
+            en: "Seed Subsidy",
+            hi: "बीज सब्सिडी",
+            ta: "விதை மானியம்",
+            te: "విత్తన సబ్సిడీ",
+            kn: "ಬೀಜ ಅನುದಾನ"
+        },
+        state: {
+            en: "Maharashtra",
+            hi: "महाराष्ट्र",
+            ta: "மகாராஷ்டிரா",
+            te: "మహారాష్ట్ర",
+            kn: "ಮಹಾರಾಷ್ಟ್ರ"
+        },
+        purpose: {
+            en: "Provides financial aid to farmers for purchasing high-quality seeds at a reduced price.",
+            hi: "किसानों को उच्च गुणवत्ता वाले बीजों को रियायती दरों पर खरीदने के लिए वित्तीय सहायता प्रदान करता है।",
+            ta: "விவசாயிகள் உயர்தர விதைகளை குறைந்த விலையில் வாங்க நிதியுதவி வழங்குகிறது.",
+            te: "వ్యవసాయదారులకు అధిక నాణ్యత గల విత్తనాలను తక్కువ ధరకు కొనుగోలు చేయడానికి ఆర్థిక సహాయం అందిస్తుంది.",
+            kn: "ಉತ್ತಮ ಗುಣಮಟ್ಟದ ಬೀಜಗಳನ್ನು ಕಡಿಮೆ ದರದಲ್ಲಿ ಖರೀದಿಸಲು ರೈತರಿಗೆ ಆರ್ಥಿಕ ಸಹಾಯವನ್ನು ಒದಗಿಸುತ್ತದೆ."
+        },
+        link: "https://agri.maharashtra.gov.in"
+    },
+    {
+        name: {
+            en: "Organic Farming Subsidy",
+            hi: "जैविक खेती सब्सिडी",
+            ta: "நிலக்கொழுந்து விவசாய மானியம்",
+            te: "సేంద్రీయ వ్యవసాయ సబ్సిడీ",
+            kn: "ಸಾವಯವ ಕೃಷಿ ಅನುದಾನ"
+        },
+        category: {
+            en: "Organic Farming",
+            hi: "जैविक खेती",
+            ta: "நிலக்கொழுந்து விவசாயம்",
+            te: "సేంద్రీయ వ్యవసాయం",
+            kn: "ಸಾವಯವ ಕೃಷಿ"
+        },
+        state: {
+            en: "Kerala",
+            hi: "केरल",
+            ta: "கேரளா",
+            te: "కేరళ",
+            kn: "ಕೇರಳ"
+        },
+        purpose: {
+            en: "Encourages farmers to adopt organic farming by providing financial incentives and training.",
+            hi: "किसानों को जैविक खेती अपनाने के लिए वित्तीय प्रोत्साहन और प्रशिक्षण प्रदान करता है।",
+            ta: "நிலக்கொழுந்து விவசாயத்தை பயிற்சி மற்றும் நிதி உதவியுடன் ஊக்குவிக்கிறது.",
+            te: "వ్యవసాయదారులను సేంద్రీయ వ్యవసాయాన్ని స్వీకరించడానికి ఆర్థిక ప్రోత్సాహకాలు మరియు శిక్షణ అందిస్తుంది.",
+            kn: "ರೈತರು ಸಾವಯವ ಕೃಷಿಯನ್ನು ಅಳವಡಿಸಿಕೊಳ್ಳಲು ಆರ್ಥಿಕ ಪ್ರೋತ್ಸಾಹ ಮತ್ತು ತರಬೇತಿಯನ್ನು ಒದಗಿಸುತ್ತದೆ."
+        },
+        link: "https://keralaagriculture.gov.in"
+    },
+    {
+        name: {
+            en: "Dairy Entrepreneurship Development",
+            hi: "डेयरी उद्यमिता विकास",
+            ta: "பால்வள தொழில்முனைவோர் மேம்பாடு",
+            te: "పాల పరిశ్రమ అభివృద్ధి",
+            kn: "ಹಾಲು ಉದ್ಯಮಶೀಲತಾ ಅಭಿವೃದ್ಧಿ"
+        },
+        category: {
+            en: "Livestock",
+            hi: "पशुपालन",
+            ta: "மிருகபண்ணை",
+            te: "పశుసంవర్ధక",
+            kn: "ಪಶುಸಂಗೋಪನೆ"
+        },
+        state: {
+            en: "Punjab",
+            hi: "पंजाब",
+            ta: "பஞ்சாப்",
+            te: "పంజాబ్",
+            kn: "ಪಂಜಾಬ್"
+        },
+        purpose: {
+            en: "Supports dairy farmers with loans and subsidies to set up modern dairy farms.",
+            hi: "आधुनिक डेयरी फार्म स्थापित करने के लिए डेयरी किसानों को ऋण और सब्सिडी प्रदान करता है।",
+            ta: "நவீன பால் பண்ணைகளை அமைப்பதற்கான கடன்கள் மற்றும் மானியங்களை வழங்குகிறது.",
+            te: "ఆధునిక పాల పరిశ్రమలను స్థాపించడానికి వ్యవసాయదారులకు రుణాలు మరియు సబ్సిడీలను అందిస్తుంది.",
+            kn: "ಆಧುನಿಕ ಹಾಲು ಫಾರ್ಮ್ ಸ್ಥಾಪನೆಗಾಗಿ ರೈತರಿಗೆ ಸಾಲ ಮತ್ತು ಅನುದಾನವನ್ನು ಒದಗಿಸುತ್ತದೆ."
+        },
+        link: "https://dahd.nic.in"
+    },
+    {
+        name: {
+            en: "Agriculture Infrastructure Fund",
+            hi: "कृषि अवसंरचना कोष",
+            ta: "விவசாய கட்டமைப்பு நிதி",
+            te: "వ్యవసాయ మౌలిక సదుపాయాల నిధి",
+            kn: "ಕೃಷಿ ಮೂಲಸೌಕರ್ಯ ನಿಧಿ"
+        },
+        category: {
+            en: "Farm Infrastructure",
+            hi: "कृषि अवसंरचना",
+            ta: "விவசாய கட்டமைப்பு",
+            te: "వ్యవసాయ మౌలిక సదుపాయాలు",
+            kn: "ಕೃಷಿ ಮೂಲಸೌಕರ್ಯ"
+        },
+        state: {
+            en: "India",
+            hi: "भारत",
+            ta: "இந்தியா",
+            te: "భారతదేశం",
+            kn: "ಭಾರತ"
+        },
+        purpose: {
+            en: "Provides credit support for building cold storage, warehouses, and farm infrastructure.",
+            hi: "कोल्ड स्टोरेज, वेयरहाउस और कृषि अवसंरचना निर्माण के लिए क्रेडिट सहायता प्रदान करता है।",
+            ta: "குளிர் சேமிப்பு, களஞ்சியம் மற்றும் விவசாய உள்கட்டமைப்பு உருவாக்கத்திற்கான கடன் ஆதரவನ್ನು வழங்குகிறது.",
+            te: "కొల్డ్ స్టోరేజ్, గిడ్డంగులు మరియు వ్యవసాయ మౌలిక సదుపాయాలను నిర్మించడానికి క్రెడిట్ మద్దతు అందిస్తುంది.",
+            kn: "ಕೋಲ್ಡ್ ಸ್ಟೋರೇಜ್, ಗೋದಾಮುಗಳು ಮತ್ತು ಕೃಷಿ ಮೂಲಸೌಕರ್ಯ ನಿರ್ಮಾಣಕ್ಕೆ ಕ್ರೆಡಿಟ್ ಬೆಂಬಲವನ್ನು ಒದಗಿಸುತ್ತದೆ."
+        },
+        link: "https://agriwelfare.gov.in"
+    },
+    {
+        name: {
+            en: "YSR Rythu Bharosa",
+            hi: "वाईएसआर रैतु भरोसा",
+            ta: "YSR ரைது பரோசா",
+            te: "వైఎస్సార్ రైతు భరోసా",
+            kn: "ವೈಸ್‌ಆರ್ ರೈತು ಭರೋಸಾ"
+        },
+        category: {
+            en: "Financial Support",
+            hi: "वित्तीय सहायता",
+            ta: "நிதி ஆதரவு",
+            te: "ఆర్థిక మద్దతు",
+            kn: "ಆರ್ಥಿಕ ಸಹಾಯ"
+        },
+        state: {
+            en: "Andhra Pradesh",
+            hi: "आंध्र प्रदेश",
+            ta: "ஆந்திரப் பிரதேசம்",
+            te: "ఆంధ్రప్రదేశ్",
+            kn: "ಆಂಧ್ರ ಪ್ರದೇಶ"
+        },
+        purpose: {
+            en: "₹13,500 per year support for farmers.",
+            hi: "किसानों को ₹13,500 प्रति वर्ष की सहायता।",
+            ta: "விவசாயிகளுக்கு ஆண்டுக்கு ₹13,500 உதவி.",
+            te: "రైతులకు సంవత్సరానికి ₹13,500 మద్దతు.",
+            kn: "ರೈತರಿಗೆ ವರ್ಷಕ್ಕೆ ₹13,500 ಸಹಾಯ."
+        },
+        link: "https://ysrrythubharosa.ap.gov.in"
+    },
+    {
+        name: {
+            en: "Tamil Nadu Farmers Crop Insurance",
+            hi: "तमिलनाडु किसान फसल बीमा",
+            ta: "தமிழ்நாடு விவசாயிகள் பயிர் காப்பீடு",
+            te: "తమిళనాడు రైతుల పంట బీమా",
+            kn: "ತಮಿಳುನಾಡು ರೈತರು ಬೆಳೆ ವಿಮೆ"
+        },
+        category: {
+            en: "Crop Insurance",
+            hi: "फसल बीमा",
+            ta: "பயிர் காப்பீடு",
+            te: "పంట బీమా",
+            kn: "ಬೆಳೆ ವಿಮೆ"
+        },
+        state: {
+            en: "Tamil Nadu",
+            hi: "तमिलनाडु",
+            ta: "தமிழ்நாடு",
+            te: "తమిళనాడు",
+            kn: "ತಮಿಳುನಾಡು"
+        },
+        purpose: {
+            en: "Compensation for crop loss due to natural calamities.",
+            hi: "प्राकृतिक आपदाओं के कारण फसल नुकसान के लिए मुआवजा।",
+            ta: "இயற்கை பேரழிவுகளால் பயிர் சேதத்திற்கு இழப்பீடு.",
+            te: "ప్రకృతి విపత్తుల వల్ల పంట నష్టానికి పరిహారం.",
+            kn: "ನೈಸರ್ಗಿಕ ವಿಪತ್ತಿನಿಂದ ಬೆಳೆ ನಷ್ಟಕ್ಕೆ ಪರಿಹಾರ."
+        },
+        link: "https://www.tnagrisnet.tn.gov.in"
+    },
+    {
+        name: {
+            en: "Raitha Siri",
+            hi: "रैथा सीरी",
+            ta: "ரைத்தா சிரி",
+            te: "రైత సిరి",
+            kn: "ರೈತ ಸಿರಿ"
+        },
+        category: {
+            en: "Millet Promotion",
+            hi: "मिलेट प्रोत्साहन",
+            ta: "கம்பு ஊக்குவிப்பு",
+            te: "మిల్లెట్ ప్రోత్సాహం",
+            kn: "ಸಿರಿಧಾನ್ಯ ಪ್ರೋత್ಸಾಹ"
+        },
+        state: {
+            en: "Karnataka",
+            hi: "कर्नाटक",
+            ta: "கர்நாடகா",
+            te: "కర్ణాటక",
+            kn: "ಕರ್ನಾಟಕ"
+        },
+        purpose: {
+            en: "Financial assistance for millet growers in Karnataka.",
+            hi: "कर्नाटक में मिलेट उत्पादकों के लिए वित्तीय सहायता।",
+            ta: "கர்நாடகாவில் கம்பு உற்பத்தியாளர்களுக்கு நிதி உதவி.",
+            te: "కర్ణాటకలో మిల్లెట్ రైతులకు ఆర్థిక సహాయం.",
+            kn: "ಕರ್ನಾಟಕದ ಸಿರಿಧಾನ್ಯ ಬೆಳೆಗಾರರಿಗೆ ಆರ್ಥಿಕ ಸಹಾಯ."
+        },
+        link: "https://raitamitra.karnataka.gov.in"
+    },
+    {
+        name: {
+            en: "Bhoochetana",
+            hi: "भूमि चेतना",
+            ta: "பூசேதனா",
+            te: "భూచేతన",
+            kn: "ಭೂಚೇತನ"
+        },
+        category: {
+            en: "Soil Health",
+            hi: "मृदा स्वास्थ्य",
+            ta: "மண் ஆரோக்கியம்",
+            te: "మట్టి ఆరోగ్యం",
+            kn: "ಮಣ್ಣು ಆರೋಗ್ಯ"
+        },
+        state: {
+            en: "Karnataka",
+            hi: "कर्नाटक",
+            ta: "கர்நாடகா",
+            te: "కర్ణాటక",
+            kn: "ಕರ್ನಾಟಕ"
+        },
+        purpose: {
+            en: "Improves soil fertility and productivity through micronutrient management.",
+            hi: "सूक्ष्म पोषक तत्व प्रबंधन के माध्यम से मृदा उर्वरता और उत्पादकता में सुधार।",
+            ta: "மைக்ரோ நியூட்ரಿಯಂಟ್ மேலாண்மை மூலம் மண் வளம் மற்றும் உற்பத்தியை மேம்படுத்துகிறது.",
+            te: "సూక్ష్మ పోషకాలు నిర్వహణ ద్వారా మట్టి సారాన్ని, దిగుబడిని పెంచుతుంది.",
+            kn: "ಮೈಕ್ರೋನ್ಯೂಟ್ರಿಯಂಟ್ ನಿರ್ವಹಣೆಯ ಮೂಲಕ ಮಣ್ಣಿನ ಸಾರವಂತಿಕೆ ಮತ್ತು ಉತ್ಪಾದಕತೆ ಹೆಚ್ಚಿಸುತ್ತದೆ."
+        },
+        link: "https://raitamitra.karnataka.gov.in"
+    },
+    {
+        name: {
+            en: "YSR Sunna Vaddi",
+            hi: "वाईएसआर सुन्ना वड्डी",
+            ta: "YSR சுன்னா வடடி",
+            te: "వైఎస్సార్ సున్నా వడ్డీ",
+            kn: "ವೈಸ್‌ಆರ್ ಸುನ್ನ ವಡ್ಡಿ"
+        },
+        category: {
+            en: "Interest Free Loan",
+            hi: "ब्याज मुक्त ऋण",
+            ta: "வட்டி இல்லா கடன்",
+            te: "వడ్డీ లేని రుణం",
+            kn: "ಬಡ್ಡಿ ರಹಿತ ಸಾಲ"
+        },
+        state: {
+            en: "Andhra Pradesh",
+            hi: "आंध्र प्रदेश",
+            ta: "ஆந்திரப் பிரதேசம்",
+            te: "ఆంధ్రప్రదేశ్",
+            kn: "ಆಂಧ್ರ ಪ್ರದೇಶ"
+        },
+        purpose: {
+            en: "Interest-free loans for women self-help groups and farmers.",
+            hi: "महिला स्वयं सहायता समूहों और किसानों के लिए ब्याज मुक्त ऋण।",
+            ta: "பெண்கள் சுய உதவி குழுக்கள் மற்றும் விவசாயிகளுக்கு வட்டி இல்லா கடன்.",
+            te: "మహిళా స్వయం సహాయ సంఘాలు, రైతులకు వడ్డీ లేని రుణాలు.",
+            kn: "ಮಹಿಳಾ ಸ್ವಸಹಾಯ ಗುಂಪುಗಳು ಮತ್ತು ರೈತರಿಗೆ ಬಡ್ಡಿ ರಹಿತ ಸಾಲಗಳು."
+        },
+        link: "https://apmepma.gov.in"
+    },
+    {
+        name: {
+            en: "Kuruvai Cultivation Package",
+            hi: "कुरुवई खेती पैकेज",
+            ta: "குருவை சாகுபடி தொகுப்பு",
+            te: "కురువై సాగు ప్యాకేజీ",
+            kn: "ಕುರುವೈ ಬೆಳೆ ಪ್ಯಾಕೇಜ್"
+        },
+        category: {
+            en: "Paddy Cultivation",
+            hi: "धान की खेती",
+            ta: "நெல் சாகுபடி",
+            te: "బియ్యం సాగు",
+            kn: "ಅಕ್ಕಿ ಬೆಳೆ"
+        },
+        state: {
+            en: "Tamil Nadu",
+            hi: "तमिलनाडु",
+            ta: "தமிழ்நாடு",
+            te: "తమిళనాడు",
+            kn: "ತಮಿಳುನಾಡು"
+        },
+        purpose: {
+            en: "Financial and input support for Kuruvai paddy farmers.",
+            hi: "कुरुवई धान किसानों के लिए वित्तीय और इनपुट सहायता।",
+            ta: "குருவை நெல் விவசாயிகளுக்கு நிதி மற்றும் உள்ளீடு உதவி.",
+            te: "కురువై బియ్యం రైతులకు ఆర్థిక, ఇన్‌పుట్ సహాయం.",
+            kn: "ಕುರುವೈ ಅಕ್ಕಿ ರೈತರಿಗೆ ಆರ್ಥಿಕ ಮತ್ತು ಇನ್‌ಪುಟ್ ಬೆಂಬಲ."
+        },
+        link: "https://www.tnagrisnet.tn.gov.in"
+    },
+    {
+        name: {
+            en: "Karshaka Kshemanidhi",
+            hi: "कृषक क्षेम निधि",
+            ta: "கர்ஷಕ க்ஷೇಮನಿಧಿ",
+            te: "కర్షక క్షేమనిధి",
+            kn: "ಕೃಷಕ ಕ್ಷೇಮನಿಧಿ"
+        },
+        category: {
+            en: "Pension Scheme",
+            hi: "पेंशन योजना",
+            ta: "ஓய்வூதியத் திட்டம்",
+            te: "పెన్షన్ పథకం",
+            kn: "ಪಿಂಚಣಿ ಯೋಜನೆ"
+        },
+        state: {
+            en: "Kerala",
+            hi: "केरल",
+            ta: "கேரளா",
+            te: "కేరళ",
+            kn: "ಕೇರಳ"
+        },
+        purpose: {
+            en: "Pension scheme for small and marginal farmers in Kerala.",
+            hi: "केरल के छोटे और सीमांत किसानों के लिए पेंशन योजना।",
+            ta: "கேரளாவின் சிறிய மற்றும் எல்லைக்குட்பட்ட விவசாயிகளுக்கான ஓய்வூதியத் திட்டம்.",
+            te: "కేరళలో చిన్న, సరిహద్దు రైతులకు పెన్షన్ పథకం.",
+            kn: "ಕೇರಳದ ಸಣ್ಣ ಮತ್ತು ಅಂಚಿನ ರೈತರಿಗೆ ಪಿಂಚಣಿ ಯೋಜನೆ."
+        },
+        link: "https://ksk.kerala.gov.in"
+    },
+    {
+        name: {
+            en: "Vaanam Vasapadum",
+            hi: "वाणम वासपडुम",
+            ta: "வானம் வசப்படும்",
+            te: "వానమ్ వాసపడుం",
+            kn: "ವಾನಂ ವಸಪಡುಮ್"
+        },
+        category: {
+            en: "Rainwater Harvesting",
+            hi: "वर्षा जल संचयन",
+            ta: "மழைநீர் சேகரிப்பு",
+            te: "వర్షపు నీటి సంరక్షణ",
+            kn: "ಮಳೆನೀರು ಸಂಗ್ರಹಣೆ"
+        },
+        state: {
+            en: "Tamil Nadu",
+            hi: "तमिलनाडु",
+            ta: "தமிழ்நாடு",
+            te: "తమిళనాడు",
+            kn: "ತಮಿಳುನಾಡು"
+        },
+        purpose: {
+            en: "Promotes rainwater harvesting and water conservation in farms.",
+            hi: "खेतों में वर्षा जल संचयन और जल संरक्षण को बढ़ावा देता है।",
+            ta: "விவசாய நிலங்களில் மழைநீர் சேகரிப்பு மற்றும் நீர் பாதுகாப்பை ஊக்குவிக்கிறது.",
+            te: "పంట పొలాల్లో వర్షపు నీటి సంరక్షణ, నీటి పరిరక్షణను ప్రోత్సహిస్తుంది.",
+            kn: "ರೈತರು ತಮ್ಮ ಹೊಲಗಳಲ್ಲಿ ಮಳೆನೀರು ಸಂಗ್ರಹಣೆ ಮತ್ತು ನೀರಿನ ಸಂರಕ్ಷಣೆಯನ್ನು ಉತ್ತೇಜಿಸುತ್ತದೆ."
+        },
+        link: "https://www.tn.gov.in/scheme/data_view/245"
+    },
+    {
+        name: {
+            en: "Subhiksha Keralam",
+            hi: "सुभिक्ष केरळम",
+            ta: "சுபிக்ஷா கேரளம்",
+            te: "సుభిక్ష కేరളം",
+            kn: "ಸುಭಿಕ್ಷ ಕೇರളം"
+        },
+        category: {
+            en: "Food Security",
+            hi: "खाद्य सुरक्षा",
+            ta: "உணவு பாதுகாப்பு",
+            te: "ఆహార భద్రత",
+            kn: "ಆಹಾರ ಭದ್ರತೆ"
+        },
+        state: {
+            en: "Kerala",
+            hi: "केरल",
+            ta: "கேரளா",
+            te: "కేరళ",
+            kn: "ಕೇರಳ"
+        },
+        purpose: {
+            en: "Promotes food security and self-sufficiency through local food production.",
+            hi: "स्थानीय खाद्य उत्पादन के माध्यम से खाद्य सुरक्षा और आत्मनिर्भरता को बढ़ावा देता है।",
+            ta: "உள்ளூர் உணவு உற்பத்தி மூலம் உணவு பாதுகாப்பும், சுயநிறைவும் ஊக்குவிக்கப்படுகிறது.",
+            te: "స్థానిక ఆహార ఉత్పత్తి ద్వారా ఆహార భద్రత, స్వయం సమృద్ధిని ప్రోత్సహిస్తుంది.",
+            kn: "ಸ್ಥಳೀಯ ಆಹಾರ ಉತ್ಪಾದನೆಯ ಮೂಲಕ ಆಹಾರ ಭದ್ರತೆ ಮತ್ತು ಸ್ವಾವಲಂಬನೆಯನ್ನು ಉತ್ತೇಜಿಸುತ್ತದೆ."
+        },
+        link: "https://aims.kerala.gov.in"
+    },
+    {
+        name: {
+            en: "Zero Budget Natural Farming (ZBNF)",
+            hi: "शून्य बजट प्राकृतिक खेती",
+            ta: "பூஜ்ய பட்ஜெட் இயற்கை விவசாயம்",
+            te: "జీరో బడ్జెట్ నేచురల్ ఫార్మింగ్",
+            kn: "ಶೂನ್ಯ ಬಜೆಟ್ ನೈಸರ್ಗಿಕ ಕೃಷಿ"
+        },
+        category: {
+            en: "Natural Farming",
+            hi: "प्राकृतिक खेती",
+            ta: "இயற்கை விவசாயம்",
+            te: "ప్రకృతి వ్యవసాయం",
+            kn: "ನೈಸರ್ಗಿಕ ಕೃಷಿ"
+        },
+        state: {
+            en: "Andhra Pradesh",
+            hi: "आंध्र प्रदेश",
+            ta: "ஆந்திரப் பிரதேசம்",
+            te: "ఆంధ్రప్రదేశ్",
+            kn: "ಆಂಧ್ರ ಪ್ರದೇಶ"
+        },
+        purpose: {
+            en: "Promotes chemical-free farming and reduces input costs for farmers.",
+            hi: "रासायनिक मुक्त खेती को बढ़ावा देता है और किसानों के लिए लागत कम करता है।",
+            ta: "இயற்கை விவசாயத்தை ஊக்குவித்து விவசாயிகளுக்கான செலவைக் குறைக்கிறது.",
+            te: "రసాయన రహిత వ్యవసాయాన్ని ప్రోత్సహించి రైతుల ఖర్చులను తగ్గిస్తుంది.",
+            kn: "ರಾಸಾಯನಿಕ ರಹಿತ ಕೃಷಿಯನ್ನು ಉತ್ತೇಜಿಸಿ ರೈತರಿಗೆ ಇನ್‌ಪುಟ್ ವೆಚ್ಚವನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತದೆ."
+        },
+        link: "https://apzbnf.in"
+    }
+];
+
+
+    
+
+    function filterSchemes(query) {
+        currentPage = 1;
+        filteredSchemes = schemes.filter(scheme =>
+            scheme.name[currentLang].toLowerCase().includes(query) ||
+            scheme.category[currentLang].toLowerCase().includes(query) ||
+            scheme.state[currentLang].toLowerCase().includes(query) ||
+            scheme.purpose[currentLang].toLowerCase().includes(query)
+        );
+        renderSchemes();
+    }
+
+    function renderSchemes() {
+        const start = (currentPage - 1) * perPage;
+        const paginatedSchemes = filteredSchemes.slice(start, start + perPage);
+        const schemeList = document.getElementById("scheme-list");
+        schemeList.innerHTML = "";
+        if (paginatedSchemes.length === 0) {
+            schemeList.innerHTML = `<tr><td colspan="5" class="text-center">No matching schemes found</td></tr>`;
+        } else {
+            paginatedSchemes.forEach(scheme => {
+                schemeList.innerHTML += `
+                    <tr>
+                        <td>${scheme.name[currentLang]}</td>
+                        <td>${scheme.category[currentLang]}</td>
+                        <td>${scheme.state[currentLang]}</td>
+                        <td>${scheme.purpose[currentLang]}</td>
+                        <td><a href="${scheme.link}" target="_blank" class="btn btn-primary">${translations[currentLang].applyNow}</a></td>
+                    </tr>`;
+            });
+        }
+        document.getElementById("prev-btn").disabled = currentPage === 1;
+        document.getElementById("next-btn").disabled = currentPage * perPage >= filteredSchemes.length;
+    }
+
+    document.getElementById("search").addEventListener("input", (event) => {
+        const query = event.target.value.toLowerCase();
+        filterSchemes(query);
+    });
+
+    document.getElementById("language").addEventListener("change", (event) => {
+        currentLang = event.target.value;
+        updateTitle();
+        filterSchemes(document.getElementById("search").value.toLowerCase());
+    });
+
+    document.getElementById("prev-btn").addEventListener("click", () => { currentPage--; renderSchemes(); });
+    document.getElementById("next-btn").addEventListener("click", () => { currentPage++; renderSchemes(); });
+
+    function updateTitle() {
+        document.getElementById("title").innerText = translations[currentLang].title;
+    }
+
+    // Initialize filteredSchemes and render first page
+    filteredSchemes = schemes;
+    renderSchemes();
+</script>
+</body>
+</html>

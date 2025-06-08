@@ -6,7 +6,7 @@ import base64
 import groq
 from io import BytesIO
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, jsonify, send_from_directory, session, redirect, url_for, Response, g
+from flask import Flask, render_template, request, jsonify, send_from_directory, session, redirect, url_for, Response, g, stream_with_context
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -117,8 +117,8 @@ translations = {
         'message_input_placeholder': 'Type your message...',
         'send_button': 'Send',
         'voice_input_button': 'Voice Input',
-        'welcome_message': 'Welcome to the Agriculture Vigilance System',
-        'welcome_description': 'Your comprehensive solution for modern agriculture management.',
+        'welcome_message': 'Welcome to Agriculture Vigilance System',
+        'welcome_description': 'Your comprehensive solution for modern agriculture. Monitor your farm, detect diseases, get AI-powered advice, and stay informed with real-time weather updates.',
         'get_started': 'Get Started',
         'current_location': 'Current Location',
         'weather_info': 'Weather Information',
@@ -152,6 +152,37 @@ translations = {
         'no_selected_file_error': 'No selected file',
         'detection_failed_error': 'Detection failed. Please try again.',
         'disease_detector_not_initialized_error': 'Disease detector not initialized.',
+        'home_title': 'Agriculture Vigilance System',
+        'in_location': 'in',
+        'welcome_description': 'Your comprehensive solution for modern agriculture. Monitor your farm, detect diseases, get AI-powered advice, and stay informed with real-time weather updates.',
+        'check_location_weather': 'Check Location & Weather',
+        'video_monitoring_title': 'Video Monitoring',
+        'video_monitoring_description': 'Keep a close eye on your farm with real-time video feeds and automated anomaly detection.',
+        'view_feeds': 'View Feeds',
+        'disease_pest_detection_title': 'Disease & Pest Detection',
+        'disease_pest_detection_description': 'Upload plant images for quick and accurate disease and pest identification and treatment recommendations.',
+        'analyze_image': 'Analyze Image',
+        'select_language': 'Select Language',
+        'back_to_dashboard': 'Back to Dashboard',
+        'treatment_label': 'Treatment',
+        'confidence_label': 'Confidence',
+        'disease_detected': 'Disease Detected',
+        'no_disease_detected': 'No Disease Detected',
+        'pest_detected': 'Pest Detected',
+        'no_pest_detected': 'No Pest Detected',
+        'upload_image_placeholder': 'Upload an image of your crop for disease detection.',
+        'processing_image': 'Processing image...',
+        'error_processing_image': 'Error processing image. Please try again.',
+        'image_display': 'Image Display',
+        'disease_results': 'Disease Results',
+        'pest_results': 'Pest Results',
+        'upload_image_title': 'Upload Image',
+        'choose_file': 'Choose File',
+        'chatbot_title': 'Agricultural Assistant Chat',
+        'message_input_placeholder': 'Type your message...',
+        'send_button': 'Send',
+        'voice_input_button': 'Voice Input',
+        'dashboard_title': 'Agriculture Vigilance System'
     },
     'hi': {
         'site_title': 'कृषि निगरानी प्रणाली',
@@ -166,7 +197,7 @@ translations = {
         'send_button': 'भेजें',
         'voice_input_button': 'वॉइस इनपुट',
         'welcome_message': 'कृषि निगरानी प्रणाली में आपका स्वागत है',
-        'welcome_description': 'आधुनिक कृषि प्रबंधन के लिए आपका व्यापक समाधान।',
+        'welcome_description': 'आधुनिक कृषि के लिए आपका व्यापक समाधान। अपने खेत की निगरानी करें, रोगों का पता लगाएं, AI-संचालित सलाह प्राप्त करें, और वास्तविक समय के मौसम अपडेट के साथ सूचित रहें।',
         'get_started': 'शुरू करें',
         'current_location': 'वर्तमान स्थान',
         'weather_info': 'मौसम की जानकारी',
@@ -186,13 +217,25 @@ translations = {
         'no_alerts': 'कोई हालिया अलर्ट नहीं।',
         'last_updated': 'अंतिम अपडेट',
         'groq_error': 'एआई सलाह अनुपलब्ध है।',
+        'home_title': 'कृषि निगरानी प्रणाली',
+        'in_location': 'में',
+        'welcome_description': 'आधुनिक कृषि के लिए आपका व्यापक समाधान। अपने खेत की निगरानी करें, रोगों का पता लगाएं, AI-संचालित सलाह प्राप्त करें, और वास्तविक समय के मौसम अपडेट के साथ सूचित रहें।',
+        'check_location_weather': 'स्थान और मौसम की जांच करें',
+        'video_monitoring_title': 'वीडियो निगरानी',
+        'video_monitoring_description': 'रीयल-टाइम वीडियो फीड्स और स्वचालित विसंगति पहचान के साथ अपने खेत पर नज़र रखें।',
+        'view_feeds': 'फीड्स देखें',
+        'disease_pest_detection_title': 'रोग और कीट पहचान',
+        'disease_pest_detection_description': 'त्वरित और सटीक रोग और कीट पहचान और उपचार सिफारिशों के लिए पौधों की छवियां अपलोड करें।',
+        'analyze_image': 'छवि का विश्लेषण करें',
+        'dashboard_title': 'कृषि निगरानी प्रणाली',
+        'back_to_dashboard': 'डैशबोर्ड पर वापस'
     },
     'ta': {
         'site_title': 'விவசாய கண்காணிப்பு அமைப்பு',
         'home_link': 'முகப்பு',
         'video_monitoring_link': 'வீடியோ கண்காணிப்பு',
         'disease_detection_link': 'நோய் கண்டறிதல்',
-        'location_weather_link': 'இடம் மற்றும் வானிலை',
+        'location_weather_link': 'இடம் மத்தும் வானிலை',
         'schemes_link': 'விவசாய திட்டங்கள்',
         'chatbot_title': 'விவசாய உதவி சாட்',
         'close_button': 'மூடு',
@@ -200,18 +243,18 @@ translations = {
         'send_button': 'அனுப்பு',
         'voice_input_button': 'குரல் உள்ளீடு',
         'welcome_message': 'விவசாய கண்காணிப்பு அமைப்புக்கு வரவேற்கிறோம்',
-        'welcome_description': 'நவீன விவசாய நிர்வாகத்திற்கான உங்கள் விரிவான தீர்வு.',
+        'welcome_description': 'நவீன விவசாயத்திற்கான உங்கள் விரிவான தீர்வு. உங்கள் பண்ணையை கண்காணிக்கவும், நோய்களை கண்டறியவும், AI-ஆதரவு அறிவுரைகளைப் பெறவும், நேரலை வானிலை புதுப்பித்தல்களுடன் தகவலறிந்திருக்கவும்.',
         'get_started': 'தொடங்கு',
         'current_location': 'தற்போதைய இடம்',
         'weather_info': 'வானிலை தகவல்',
         'loading_weather': 'வானிலை ஏற்றப்படுகிறது...',
         'location_error': 'இடத்தைப் பெறுவதில் பிழை.',
         'weather_error': 'வானிலை தரவைப் பெறுவதில் பிழை.',
-        'upload_image_title': 'நோய் கண்டறிதலுக்கான படத்தை பதிவேற்றவும்',
+        'upload_image_title': 'நோய் கண்டறிதலுக்கான படத்தை அப்பலோட் சேயி',
         'select_image': 'படத்தைத் தேர்ந்தெடுக்கவும்',
-        'upload_button': 'பதிவேற்று',
+        'upload_button': 'அப்பலோட் சேயி',
         'detection_results': 'கண்டறிதல் முடிவுகள்',
-        'no_results': 'எந்த நோயும் கண்டறியப்படவில்லை அல்லது தாவர படம் இல்லை.',
+        'no_results': 'எந்த நோயும் கண்டறியப்படவில்லை அ஥வா தாவர படம் இல்லை.',
         'symptoms': 'அறிகுறிகள்',
         'causes': 'காரணங்கள்',
         'treatment_prevention': 'சிகிச்சை மற்றும் தடுப்பு',
@@ -220,9 +263,21 @@ translations = {
         'no_alerts': 'சமீபத்திய எச்சரிக்கைகள் இல்லை.',
         'last_updated': 'கடைசி புதுப்பிப்பு',
         'groq_error': 'AI ஆலோசனை கிடைக்கவில்லை.',
+        'home_title': 'விவசாய கண்காணிப்பு அமைப்பு',
+        'in_location': 'இல்',
+        'welcome_description': 'நவீன விவசாயத்திற்கான உங்கள் விரிவான தீர்வு. உங்கள் பண்ணையை கண்காணிக்கவும், நோய்களை கண்டறியவும், AI-ஆதரவு அறிவுரைகளைப் பெறவும், நேரலை வானிலை புதுப்பித்தல்களுடன் தகவலறிந்திருக்கவும்.',
+        'check_location_weather': 'இருப்பிடம் & வானிலையை சரிபார்க்கவும்',
+        'video_monitoring_title': 'வீடியோ கண்காணிப்பு',
+        'video_monitoring_description': 'நேரலை வீடியோ ஊட்டங்கள் மற்றும் தானியங்கி முரண்பாடு கண்டறிதல் மூலம் உங்கள் பண்ணையை கவனமாக கண்காணிக்கவும்.',
+        'view_feeds': 'ஊட்டங்களைக் காண்க',
+        'disease_pest_detection_title': 'நோய் மற்றும் பூச்சி கண்டறிதல்',
+        'disease_pest_detection_description': 'விரைவான மற்றும் துல்லியமான நோய் மற்றும் பூச்சி அடையாளம் காணுதல் மற்றும் சிகிச்சை பரிந்துரைகளுக்காக தாவர படங்களை பதிவேற்றவும்.',
+        'analyze_image': 'படத்தை பகுப்பாய்வு செய்க',
+        'dashboard_title': 'விவசாய கண்காணிப்பு அமைப்பு',
+        'back_to_dashboard': 'டாஷ்போர்டுக்கு திரும்பு'
     },
     'te': {
-        'site_title': 'వ్యవసాయ నిఘా వ్యవస్థ',
+        'site_title': 'వ్యవసాయ శ్రేణి వ్యవస్థ',
         'home_link': 'హోమ్',
         'video_monitoring_link': 'వీడియో పర్యవేక్షణ',
         'disease_detection_link': 'వ్యాధి నిర్ధారణ',
@@ -233,8 +288,8 @@ translations = {
         'message_input_placeholder': 'మీ సందేశాన్ని టైప్ చేయండి...',
         'send_button': 'పంపు',
         'voice_input_button': 'వాయిస్ ఇన్‌పుట్',
-        'welcome_message': 'వ్యవసాయ నిఘా వ్యవస్థకు స్వాగతం',
-        'welcome_description': 'ఆధునిక వ్యవసాయ నిర్వహణ కోసం మీ సమగ్ర పరిష్కారం.',
+        'welcome_message': 'వ్యవసాయ శ్రేణి వ్యవస్థకు స్వాగతం',
+        'welcome_description': 'ఆధునిక వ్యవసాయానికి మీ సమగ్ర పరిష్కారం. మీ పొలాన్ని పర్యవేక్షించండి, వ్యాధులను గుర్తించండి, AI-ఆధారిత సలహా పొందండి మరియు ప్రత్యక్ష వాతావరణ నవీకరణలతో సమాచారం పొందండి.',
         'get_started': 'ప్రారంభించండి',
         'current_location': 'ప్రస్తుత స్థానం',
         'weather_info': 'వాతావరణ సమాచారం',
@@ -248,12 +303,24 @@ translations = {
         'no_results': 'వ్యాధి కనుగొనబడలేదు లేదా మొక్కల చిత్రం కాదు.',
         'symptoms': 'లక్షణాలు',
         'causes': 'కారణాలు',
-        'treatment_prevention': 'చికిత్స & నివారణ',
-        'no_feed': 'కెమెరా ఫీడ్ అందుబాటులో లేదు.',
+        'treatment_prevention': 'చికిత್స & నివారణ',
+        'no_feed': 'కెమెరా ఫీడ్ అందುబాటುలో లేదు.',
         'alerts': 'అలర్ట్‌లు',
         'no_alerts': 'ఇటీవలి అలర్ట్‌లు లేవు.',
         'last_updated': 'చివరిగా నవీకరించబడింది',
-        'groq_error': 'AI సలహా అందుబాటులో లేదు.',
+        'groq_error': 'AI సలహೆ అందುబాటುలో లేదు.',
+        'home_title': 'వ్యవసాయ శ్రేణి వ్యవస్థ',
+        'in_location': 'లో',
+        'welcome_description': 'ఆధునిక వ్యవసాయానికి మీ సమగ్ర పరిష్కారం. మీ పొలాన్ని పర్యవేక్షించండి, వ్యాధులను గుర్తించండి, AI-ఆధారిత సలహా పొందండి మరియు ప్రత్యక్ష వాతావరణ నవీకరణలతో సమాచారం పొందండి.',
+        'check_location_weather': 'స్థానం & వాతావరణాన్ని తనిఖీ చేయండి',
+        'video_monitoring_title': 'వీడియో పర్యవేక్షణ',
+        'video_monitoring_description': 'నೈవ్ వీడియో ఫీడ్‌గళ్లు మత్తు ఆటోమేటెడ్ అనామలి పత్తೆహచ్చುవికెయొందిగు నిమ్మ పొలంపై దృష్టి పెట్టండి.',
+        'view_feeds': 'ఫీడ్‌గళన్ను వీక్షిసి',
+        'disease_pest_detection_title': 'వ్యాధి మత్తు పురుగు గుర్తింపు',
+        'disease_pest_detection_description': 'వేగవంతమైన మరియు ఖచ్చితమైన వ్యాధి మత్తు పురుగు గుర్తింపు మత్తు చికిత్సా సిఫార్సుల కోసం మొక్కల చిత్రాలను అప్‌లోడ్ చేయండి.',
+        'analyze_image': 'చిత్రాన్ని విశ్లేషించండి',
+        'dashboard_title': 'వ్యవసాయ శ్రేణి వ్యవస్థ',
+        'back_to_dashboard': 'డాష్‌బోర్డ్‌గೆ హింతిరುగి'
     },
     'kn': {
         'site_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
@@ -264,11 +331,11 @@ translations = {
         'schemes_link': 'ಕೃಷಿ ಯೋಜನೆಗಳು',
         'chatbot_title': 'ಕೃಷಿ ಸಹಾಯಕ ಚಾಟ್',
         'close_button': 'ಮುಚ್ಚಿ',
-        'message_input_placeholder': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ್ ಮಾಡಿ...',
+        'message_input_placeholder': 'ನಿಮ್ಮ ಸಂದೇಶವನ್ನು ಟೈಪ్ ಮಾಡಿ...',
         'send_button': 'ಕಳುಹಿಸು',
-        'voice_input_button': 'ಧ್ವನಿ ಇನ್‌ಪುಟ್',
+        'voice_input_button': 'ಧ್ವನಿ ಇನ್‌ಪుಟ్',
         'welcome_message': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆಗೆ ಸ್ವಾಗತ',
-        'welcome_description': 'ಆಧುನಿಕ ಕೃಷಿ ನಿರ್ವಹಣೆಗಾಗಿ ನಿಮ್ಮ ಸಮಗ್ರ ಪರಿಹಾರ.',
+        'welcome_description': 'ಆಧುನಿಕ ಕೃಷಿ ನಿರ್ವಹಣೆಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ.',
         'get_started': 'ಪ್ರಾರಂಭಿಸಿ',
         'current_location': 'ಪ್ರಸ್ತುತ ಸ್ಥಳ',
         'weather_info': 'ಹವಾಮಾನ ಮಾಹಿತಿ',
@@ -278,16 +345,28 @@ translations = {
         'upload_image_title': 'ರೋಗ ಪತ್ತೆಗಾಗಿ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
         'select_image': 'ಚಿತ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
         'upload_button': 'ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
-        'detection_results': 'ಗుರ్ತಿಸುವಿಕೆಯ ಫಲಿತಾಂಶಗಳು',
+        'detection_results': 'ಗುರ్ತಿಸುವಿಕೆಯ ಫಲಿತಾಂಶಗಳು',
         'no_results': 'ಯಾವುದೇ ರೋಗ ಕಂಡುಬಂದಿಲ್ಲ ಅಥವಾ ಇದು ಸಸ್ಯದ ಚಿತ್ರವಲ್ಲ.',
-        'symptoms': 'ಲಕ್ಷಣಗಳು',
+        'symptoms': 'ಲಕ್ಷణಗಳು',
         'causes': 'ಕಾರಣಗಳು',
         'treatment_prevention': 'ಚಿಕಿತ್ಸೆ ಮತ್ತು ತಡೆಗಟ್ಟುವಿಕೆ',
-        'no_feed': 'ಯಾವುದೇ ಕ್ಯಾಮೆರಾ ಫೀಡ್ ಲಭ್ಯವಿಲ್ಲ.',
-        'alerts': 'ಅಲರ్ಟ್‌ಗಳು',
-        'no_alerts': 'ಯಾವುದೇ ಇತ್ತೀಚಿನ ಅಲರ్ಟ್‌ಗಳು ಇಲ್ಲ.',
+        'no_feed': 'ಯಾವುದೇ ಕ್ಯಾಮೆರಾ ಫೀಡ್ ಅಂದುಬಾಟುಲ್ಲೋ.',
+        'alerts': 'ಅಲರ్ట್‌ಗಳು',
+        'no_alerts': 'ಯಾವುದೇ ಇತ್ತೀಚಿನ ಅಲರ్ట್‌ಗಳು ಇಲ್ಲ.',
         'last_updated': 'ಕೊನೆಯದಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
-        'groq_error': 'AI ಸಲಹೆ ಲಭ್ಯವಿಲ್ಲ.',
+        'groq_error': 'AI ಸಲಹೆ ಅಂದುಬಾಟುಲ್ಲೋ.',
+        'home_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
+        'in_location': 'ನಲ್ಲಿ',
+        'welcome_description': 'ಆಧುನಿಕ ಕೃಷಿಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ. ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ, ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ, AI-ಚಾಲಿತ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ ಮತ್ತು ನಿಜ-ಸಮಯದ ಹವಾಮಾನ ನವೀಕರಣಗಳೊಂದಿಗೆ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.',
+        'check_location_weather': 'ಸ್ಥಳ ಮತ್ತು ಹವಾಮಾನವನ್ನು ಪರಿಶೀಲಿಸಿ',
+        'video_monitoring_title': 'ವೀಡಿಯೊ ಮೇಲ್ವಿಚಾರಣೆ',
+        'video_monitoring_description': 'ನೈವ್ ವೀಡಿಯೊ ಫೀಡ್‌గಳు ಮತ್ತು ಸ್ವಯಂಚಾಲಿತ ಅನಾಮಲಿ ಪತ್ತೆಹಚ್ಚುವಿಕೆಯೊಂದಿಗೆ ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯ ಮೇಲೆ ಗಮನವಿಡಿ.',
+        'view_feeds': 'ಫೀಡ್‌గಳನ್ನು ವೀಕ್ಷಿಸಿ',
+        'disease_pest_detection_title': 'ರೋಗ ಮತ್ತು ಕೀಟ ಪತ್ತೆ',
+        'disease_pest_detection_description': 'ವేಗವಾದ ಮತ್ತು ನಿಖರವಾದ ರೋಗ ಮತ್ತು ಕೀಟ ಗುರ్ತಿಸುವಿಕೆ ಮತ್ತು ಚಿಕಿತ್ಸೆ ಶಿಫಾರ్ಸుಗಳಿಗಾಗಿ ಸಸ್ಯ ಚಿತ್ರಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
+        'analyze_image': 'ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ',
+        'dashboard_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
+        'back_to_dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ'
     }
 }
 
@@ -466,7 +545,7 @@ def chat():
     language = request.json.get('language', g.lang) # Get language from frontend, fallback to g.lang
     logger.info(f"Chat message received in {language}: {user_message}")
 
-    def generate_groq_response(user_message):
+    def generate_groq_response_stream(user_message):
         try:
             chat_completion = groq_client.chat.completions.create(
                 messages=[
@@ -490,25 +569,29 @@ def chat():
             full_response_content = ""
             for chunk in chat_completion:
                 if chunk.choices[0].delta.content:
-                    full_response_content += chunk.choices[0].delta.content
+                    content_chunk = chunk.choices[0].delta.content
+                    full_response_content += content_chunk
+                    yield content_chunk  # Yield chunks as they come
             
-            # Translate the Groq response if the user's language is not English
+            # After streaming is complete, translate the full response if needed
             target_lang = g.lang
             if target_lang != 'en' and voice_handler:
                 try:
                     logger.info(f"Translating Groq response for chat from English to {target_lang}")
                     translated_response = voice_handler.translate_text(full_response_content, 'en', target_lang)
-                    return translated_response
+                    yield f"__FINAL_TRANSLATION__:{translated_response}" # Special marker for final translated chunk
                 except Exception as e:
                     logger.error(f"Error translating chat response: {e}")
-                    return full_response_content # Return original if translation fails
-            return full_response_content
+                    # If translation fails, the English version was already streamed, so no further action needed here.
+            else:
+                # If no translation, or translation fails, ensure a final yield if needed (though already streamed)
+                pass # The content was already yielded chunk by chunk
+
         except Exception as e:
             logger.error(f"Error generating Groq response: {e}")
-            return translations.get(g.lang, {}).get('groq_error', "I'm sorry, I couldn't process your request at the moment. Please try again later.")
+            yield translations.get(g.lang, {}).get('groq_error', "I'm sorry, I couldn't process your request at the moment. Please try again later.")
 
-    groq_response = generate_groq_response(user_message)
-    return jsonify({'response': groq_response})
+    return Response(stream_with_context(generate_groq_response_stream(user_message)), mimetype='text/plain')
 
 @app.route('/speech-to-text', methods=['POST'])
 def speech_to_text_route():
@@ -744,11 +827,11 @@ def disease_detection():
 
 @app.route('/get_schemes_content')
 def get_schemes_content():
-    return render_template('schemes.html')
+    return render_template('5 scheme.html')
 
 @app.route('/schemes')
 def schemes():
-    return render_template('schemes.html')
+    return render_template('5 scheme.html')
 
 # Socket.IO event handlers
 @socketio.on('connect')

@@ -50,7 +50,7 @@
                     <a class="nav-link text-white" href="{{ url_for('location_weather_page') }}" data-key="location_weather_link">{{ translations.get(g.lang, {}).get('location_weather_link', 'Location & Weather') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white sidebar-link" data-path="{{ url_for('get_schemes_content') }}" data-key="schemes_link">{{ translations.get(g.lang, {}).get('schemes_link', 'Agricultural Schemes') }}</a>
+                    <a class="nav-link text-white" href="{{ url_for('schemes') }}" data-key="schemes_link">{{ translations.get(g.lang, {}).get('schemes_link', 'Agricultural Schemes') }}</a>
                 </li>
             </ul>
         </nav>
