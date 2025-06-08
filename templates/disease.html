@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Disease Detection</h2>
+    <h2>{{ translations.get(g.lang, {}).get('disease_detection_heading', 'Disease Detection') }}</h2>
     
     <div class="row">
         <!-- Image Upload -->
@@ -35,88 +35,79 @@
                     {% if error %}
                         <div class="alert alert-danger">{{ error }}</div>
                     {% elif disease_result or pest_result %}
-                    <div class="row">
-                        {% if disease_result and "healthy" not in disease_result.label.lower() %}
-                        <div class="col-md-6 mb-3">
-                            <div class="card result-card border-danger h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-danger">{{ translations.get(g.lang, {}).get('disease_detection_heading', 'Disease Detection') }}: {{ disease_result.label }} ({{ disease_result.confidence }}%)</h5>
-                                    {% if disease_result.treatment_info %}
-                                    <h6>{{ translations.get(g.lang, {}).get('treatment', 'Treatment') }}:</h6>
-                                    <p>{{ disease_result.treatment_info.treatment }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('symptoms', 'Symptoms') }}:</h6>
-                                    <p>{{ disease_result.treatment_info.symptoms }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('causes', 'Causes') }}:</h6>
-                                    <p>{{ disease_result.treatment_info.causes }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('prevention', 'Prevention') }}:</h6>
-                                    <p>{{ disease_result.treatment_info.prevention }}</p>
-                                    {% endif %}
-                                </div>
+                        {% if image_path %}
+                            <div class="text-center mb-3">
+                                <img src="{{ url_for('static', filename=image_path) }}" class="img-fluid rounded" alt="Uploaded Image">
                             </div>
-                        </div>
-                        {% elif disease_result and "healthy" in disease_result.label.lower() %}
-                         <div class="col-md-6 mb-3">
-                            <div class="card result-card border-success h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-success">{{ translations.get(g.lang, {}).get('disease_detection_heading', 'Disease Detection') }}: {{ translations.get(g.lang, {}).get('disease_healthy_message', 'Your plant appears healthy for diseases!') }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                         <div class="col-md-6 mb-3">
-                            <div class="card result-card border-secondary h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-muted">{{ translations.get(g.lang, {}).get('disease_detection_heading', 'Disease Detection') }}</h5>
-                                    <p class="text-muted">{{ translations.get(g.lang, {}).get('no_disease_detected_message', 'No disease detected.') }}</p>
-                                </div>
-                            </div>
-                        </div>
                         {% endif %}
-
-                        {% if pest_result and "healthy" not in pest_result.label.lower() %}
-                        <div class="col-md-6 mb-3">
-                            <div class="card result-card border-warning h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-warning">{{ translations.get(g.lang, {}).get('pest_detection_heading', 'Pest Detection') }}: {{ pest_result.label }} ({{ pest_result.confidence }}%)</h5>
-                                    {% if pest_result.treatment_info %}
-                                    <h6>{{ translations.get(g.lang, {}).get('treatment', 'Treatment') }}:</h6>
-                                    <p>{{ pest_result.treatment_info.treatment }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('symptoms', 'Symptoms') }}:</h6>
-                                    <p>{{ pest_result.treatment_info.symptoms }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('causes', 'Causes') }}:</h6>
-                                    <p>{{ pest_result.treatment_info.causes }}</p>
-                                    <h6>{{ translations.get(g.lang, {}).get('prevention', 'Prevention') }}:</h6>
-                                    <p>{{ pest_result.treatment_info.prevention }}</p>
-                                    {% endif %}
+                        
+                        <div class="row">
+                            <!-- Disease Results -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card result-card {% if disease_result and 'healthy' not in disease_result.label.lower() %}border-danger{% else %}border-success{% endif %} h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title {% if disease_result and 'healthy' not in disease_result.label.lower() %}text-danger{% else %}text-success{% endif %}">
+                                            {{ translations.get(g.lang, {}).get('disease_detection_heading', 'Disease Detection') }}
+                                        </h5>
+                                        {% if disease_result %}
+                                            <p class="mb-2">
+                                                <strong>{{ disease_result.label }}</strong>
+                                                {% if disease_result.confidence > 0 %}
+                                                    ({{ disease_result.confidence }}%)
+                                                {% endif %}
+                                            </p>
+                                            {% if disease_result.treatment_info %}
+                                                <h6>{{ translations.get(g.lang, {}).get('treatment', 'Treatment') }}:</h6>
+                                                <p>{{ disease_result.treatment_info.treatment }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('symptoms', 'Symptoms') }}:</h6>
+                                                <p>{{ disease_result.treatment_info.symptoms }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('causes', 'Causes') }}:</h6>
+                                                <p>{{ disease_result.treatment_info.causes }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('prevention', 'Prevention') }}:</h6>
+                                                <p>{{ disease_result.treatment_info.prevention }}</p>
+                                            {% endif %}
+                                        {% else %}
+                                            <p>{{ translations.get(g.lang, {}).get('no_disease_detected_message', 'No disease detected.') }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pest Results -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card result-card {% if pest_result and 'healthy' not in pest_result.label.lower() %}border-danger{% else %}border-success{% endif %} h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title {% if pest_result and 'healthy' not in pest_result.label.lower() %}text-danger{% else %}text-success{% endif %}">
+                                            {{ translations.get(g.lang, {}).get('pest_detection_heading', 'Pest Detection') }}
+                                        </h5>
+                                        {% if pest_result %}
+                                            <p class="mb-2">
+                                                <strong>{{ pest_result.label }}</strong>
+                                                {% if pest_result.confidence > 0 %}
+                                                    ({{ pest_result.confidence }}%)
+                                                {% endif %}
+                                            </p>
+                                            {% if pest_result.treatment_info %}
+                                                <h6>{{ translations.get(g.lang, {}).get('treatment', 'Treatment') }}:</h6>
+                                                <p>{{ pest_result.treatment_info.treatment }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('symptoms', 'Symptoms') }}:</h6>
+                                                <p>{{ pest_result.treatment_info.symptoms }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('causes', 'Causes') }}:</h6>
+                                                <p>{{ pest_result.treatment_info.causes }}</p>
+                                                <h6>{{ translations.get(g.lang, {}).get('prevention', 'Prevention') }}:</h6>
+                                                <p>{{ pest_result.treatment_info.prevention }}</p>
+                                            {% endif %}
+                                        {% else %}
+                                            <p>{{ translations.get(g.lang, {}).get('no_pest_detected_message', 'No pest detected.') }}</p>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        {% elif pest_result and "healthy" in pest_result.label.lower() %}
-                        <div class="col-md-6 mb-3">
-                            <div class="card result-card border-success h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-success">{{ translations.get(g.lang, {}).get('pest_detection_heading', 'Pest Detection') }}: {{ translations.get(g.lang, {}).get('pest_healthy_message', 'Your plant appears healthy for pests!') }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                        {% else %}
-                         <div class="col-md-6 mb-3">
-                            <div class="card result-card border-secondary h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-muted">{{ translations.get(g.lang, {}).get('pest_detection_heading', 'Pest Detection') }}</h5>
-                                    <p class="text-muted">{{ translations.get(g.lang, {}).get('no_pest_detected_message', 'No pest detected.') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% if image_path %}
-                    <div class="text-center mt-3">
-                        <img src="{{ image_path }}" alt="Uploaded Image" class="img-fluid" style="max-width: 300px;">
-                    </div>
-                    {% endif %}
                     {% else %}
-                    <p class="text-muted">{{ translations.get(g.lang, {}).get('no_results', 'No disease or pest detected yet. Upload an image to analyze.') }}</p>
+                        <div class="text-center text-muted">
+                            <p>{{ translations.get(g.lang, {}).get('upload_plant_image_heading', 'Upload Plant Image') }}</p>
+                        </div>
                     {% endif %}
                 </div>
             </div>

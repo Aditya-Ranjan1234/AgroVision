@@ -94,15 +94,24 @@ class DiseaseDetector:
             if self.disease_model:
                 disease_predictions = self.disease_model.predict(disease_img_array, verbose=0)
                 predicted_disease_index = np.argmax(disease_predictions[0])
-                disease_label = self.DISEASE_CLASSES[predicted_disease_index]
                 disease_confidence = float(np.max(disease_predictions[0]) * 100)
-                disease_treatment_info = self._get_treatment('disease', disease_label, lang_code)
                 
-                disease_info = {
-                    'label': disease_label,
-                    'confidence': round(disease_confidence, 2),
-                    'treatment_info': disease_treatment_info
-                }
+                # Only consider predictions with confidence above 70%
+                if disease_confidence >= 70:
+                    disease_label = self.DISEASE_CLASSES[predicted_disease_index]
+                    disease_treatment_info = self._get_treatment('disease', disease_label, lang_code)
+                    
+                    disease_info = {
+                        'label': disease_label,
+                        'confidence': round(disease_confidence, 2),
+                        'treatment_info': disease_treatment_info
+                    }
+                else:
+                    disease_info = {
+                        'label': "No disease detected",
+                        'confidence': round(disease_confidence, 2),
+                        'treatment_info': self._get_treatment('disease', 'healthy', lang_code)
+                    }
             else:
                 logger.warning("Disease model not loaded. Skipping disease prediction.")
 
@@ -120,15 +129,24 @@ class DiseaseDetector:
             if self.pest_model:
                 pest_predictions = self.pest_model.predict(pest_img_array, verbose=0)
                 predicted_pest_index = np.argmax(pest_predictions[0])
-                pest_label = self.PEST_CLASSES[predicted_pest_index]
                 pest_confidence = float(np.max(pest_predictions[0]) * 100)
-                pest_treatment_info = self._get_treatment('pest', pest_label, lang_code)
                 
-                pest_info = {
-                    'label': pest_label,
-                    'confidence': round(pest_confidence, 2),
-                    'treatment_info': pest_treatment_info
-                }
+                # Only consider predictions with confidence above 70%
+                if pest_confidence >= 70:
+                    pest_label = self.PEST_CLASSES[predicted_pest_index]
+                    pest_treatment_info = self._get_treatment('pest', pest_label, lang_code)
+                    
+                    pest_info = {
+                        'label': pest_label,
+                        'confidence': round(pest_confidence, 2),
+                        'treatment_info': pest_treatment_info
+                    }
+                else:
+                    pest_info = {
+                        'label': "No pest detected",
+                        'confidence': round(pest_confidence, 2),
+                        'treatment_info': self._get_treatment('pest', 'healthy', lang_code)
+                    }
             else:
                 logger.warning("Pest model not loaded. Skipping pest prediction.")
             
