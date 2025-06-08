@@ -18,11 +18,20 @@ logger = logging.getLogger(__name__)
 class VoiceHandler:
     def __init__(self):
         logger.info("Sarvam voice system handler initialized.")
+        self.lang_map = {
+            'en': 'en-IN',
+            'hi': 'hi-IN',
+            'ta': 'ta-IN',
+            'te': 'te-IN',
+            'kn': 'kn-IN'
+            # Add other mappings if more languages are supported
+        }
 
-    def text_to_speech(self, text, lang="en-IN"):
+    def text_to_speech(self, text, lang="en"):
         """Convert text to speech using Sarvam TTS function"""
+        sarvam_lang = self.lang_map.get(lang, 'en-IN') # Default to en-IN if not found
         try:
-            audio_base64 = Text_to_audios(text, lang)
+            audio_base64 = Text_to_audios(text, sarvam_lang)
             # Sarvam returns base64 encoded audio, decode it
             audio_bytes = base64.b64decode(audio_base64)
             return audio_bytes
@@ -30,8 +39,9 @@ class VoiceHandler:
             logger.error(f"Error in text to speech with Sarvam: {str(e)}")
             return None
 
-    def speech_to_text(self, audio_data):
+    def speech_to_text(self, audio_data, src_lang="en"):
         """Convert speech to text using Sarvam STT function"""
+        sarvam_src_lang = self.lang_map.get(src_lang, 'en-IN') # Default to en-IN if not found
         # Save audio_data to a temporary WAV file
         temp_filename = f"temp_audio_{uuid.uuid4()}.wav"
         temp_filepath = os.path.join(os.getcwd(), temp_filename) # Save in current working directory
@@ -41,7 +51,10 @@ class VoiceHandler:
                 f.write(audio_data)
 
             # Call Sarvam STT function
-            response = detect_and_translate(temp_filepath)
+            # Assuming detect_and_translate can take src_lang and target_lang for translation
+            # If it only does STT and not STT+Translation, this needs to be split.
+            # For now, it will assume it tries to translate to English by default for Groq.
+            response = detect_and_translate(temp_filepath, sarvam_src_lang, 'en-IN') 
             
             if response and 'text' in response:
                 return response['text']

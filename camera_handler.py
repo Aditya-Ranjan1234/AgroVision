@@ -95,7 +95,7 @@ class CameraHandler:
                             'path': video_path,
                             'name': video_file,
                             'fps': fps,
-                            'frame_count': frame_count,
+                            'frame_count': frame_count*10,
                             'width': width,
                             'height': height
                         }

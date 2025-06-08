@@ -1,4 +1,4 @@
-def detect_and_translate(file_path):
+def detect_and_translate(file_path, src_lang_code="unknown", target_lang_code="en"):
     import requests
 
     url = "https://api.sarvam.ai/speech-to-text"
@@ -11,12 +11,12 @@ def detect_and_translate(file_path):
         "with_timestamps": "false",
         "with_diarization": "false",
         "model": "saarika:v2",
-        "language_code": "unknown"
+        "language_code": src_lang_code
     }
 
-    # Open the audio file in binary mode
+    # Open the audio file in binary mode and specify WAV format
     files = {
-        "file": ("audio.mp3", open(file_path, "rb"), "audio/mpeg")
+        "file": ("audio.wav", open(file_path, "rb"), "audio/wav")
     }
 
     response = requests.post(url, headers=headers, data=payload, files=files)

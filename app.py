@@ -291,7 +291,7 @@ translations = {
         'welcome_message': 'వ్యవసాయ శ్రేణి వ్యవస్థకు స్వాగతం',
         'welcome_description': 'ఆధునిక వ్యవసాయానికి మీ సమగ్ర పరిష్కారం. మీ పొలాన్ని పర్యవేక్షించండి, వ్యాధులను గుర్తించండి, AI-ఆధారిత సలహా పొందండి మరియు ప్రత్యక్ష వాతావరణ నవీకరణలతో సమాచారం పొందండి.',
         'get_started': 'ప్రారంభించండి',
-        'current_location': 'ప్రస్తుత స్థానం',
+        'current_location': 'ప్రస్తುత స్థానం',
         'weather_info': 'వాతావరణ సమాచారం',
         'loading_weather': 'వాతావరణం లోడ్ అవుతೋంది...',
         'location_error': 'స్థానం పొందడంలో లోపం.',
@@ -306,7 +306,7 @@ translations = {
         'treatment_prevention': 'చికిత್స & నివారణ',
         'no_feed': 'కెమెరా ఫీడ్ అందುబాటುలో లేదు.',
         'alerts': 'అలర్ట్‌లు',
-        'no_alerts': 'ఇటీవలి అలర్ట్‌లు లేవు.',
+        'no_alerts': 'ఇటీవలి అలర్ట్‌లు ఇల్ల.',
         'last_updated': 'చివరిగా నవీకరించబడింది',
         'groq_error': 'AI సలహೆ అందುబాటುలో లేదు.',
         'home_title': 'వ్యవసాయ శ్రేణి వ్యవస్థ',
@@ -315,12 +315,12 @@ translations = {
         'check_location_weather': 'స్థానం & వాతావరణాన్ని తనిఖీ చేయండి',
         'video_monitoring_title': 'వీడియో పర్యవేక్షణ',
         'video_monitoring_description': 'నೈవ్ వీడియో ఫీడ్‌గళ్లు మత్తు ఆటోమేటెడ్ అనామలి పత్తೆహచ్చುవికెయొందిగు నిమ్మ పొలంపై దృష్టి పెట్టండి.',
-        'view_feeds': 'ఫీడ్‌గళన్ను వీక్షిసి',
+        'view_feeds': 'ఫీడ్‌గళన్ను వీక್షిసి',
         'disease_pest_detection_title': 'వ్యాధి మత్తు పురుగు గుర్తింపు',
-        'disease_pest_detection_description': 'వేగవంతమైన మరియు ఖచ్చితమైన వ్యాధి మత్తు పురుగు గుర్తింపు మత్తు చికిత్సా సిఫార్సుల కోసం మొక్కల చిత్రాలను అప్‌లోడ్ చేయండి.',
-        'analyze_image': 'చిత్రాన్ని విశ్లేషించండి',
+        'disease_pest_detection_description': 'వేగవంతమైన మరియు ఖచ్చితమైన వ్యాధి మత్తు పురుగు గుర్తింపు మత్తు చికిత್సా సిఫార్సుల కోసం మొక్కల చిత్రాలను అప్‌లోడ్ చేయండి.',
+        'analyze_image': 'చిత్రాన్ని విశ్లేషిసి',
         'dashboard_title': 'వ్యవసాయ శ్రేణి వ్యవస్థ',
-        'back_to_dashboard': 'డాష్‌బోర్డ్‌గೆ హింతిరುగి'
+        'back_to_dashboard': 'డాష్‌బోర్డ್‌గೆ హింతిరುగి'
     },
     'kn': {
         'site_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
@@ -335,7 +335,7 @@ translations = {
         'send_button': 'ಕಳುಹಿಸು',
         'voice_input_button': 'ಧ್ವನಿ ಇನ್‌ಪుಟ్',
         'welcome_message': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆಗೆ ಸ್ವಾಗತ',
-        'welcome_description': 'ಆಧುನಿಕ ಕೃಷಿ ನಿರ್ವಹಣೆಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ.',
+        'welcome_description': 'ಆಧుನಿಕ ಕೃಷಿ ನಿರ್ವಹಣೆಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ.',
         'get_started': 'ಪ್ರಾರಂಭಿಸಿ',
         'current_location': 'ಪ್ರಸ್ತುತ ಸ್ಥಳ',
         'weather_info': 'ಹವಾಮಾನ ಮಾಹಿತಿ',
@@ -347,23 +347,23 @@ translations = {
         'upload_button': 'ಅಪ್‌ಲೋಡ್ ಮಾಡಿ',
         'detection_results': 'ಗುರ్ತಿಸುವಿಕೆಯ ಫಲಿತಾಂಶಗಳು',
         'no_results': 'ಯಾವುದೇ ರೋಗ ಕಂಡುಬಂದಿಲ್ಲ ಅಥವಾ ಇದು ಸಸ್ಯದ ಚಿತ್ರವಲ್ಲ.',
-        'symptoms': 'ಲಕ್ಷణಗಳು',
+        'symptoms': 'ಲಕ్ಷణಗಳು',
         'causes': 'ಕಾರಣಗಳು',
         'treatment_prevention': 'ಚಿಕಿತ್ಸೆ ಮತ್ತು ತಡೆಗಟ್ಟುವಿಕೆ',
-        'no_feed': 'ಯಾವುದೇ ಕ್ಯಾಮೆರಾ ಫೀಡ್ ಅಂದುಬಾಟುಲ್ಲೋ.',
+        'no_feed': 'ಯಾವುದೇ ಕ್ಯಾಮೆರಾ ಫೀಡ్ ಅಂದುಬಾಟುಲ್ಲೋ.',
         'alerts': 'ಅಲರ్ట್‌ಗಳು',
         'no_alerts': 'ಯಾವುದೇ ಇತ್ತೀಚಿನ ಅಲರ్ట್‌ಗಳು ಇಲ್ಲ.',
         'last_updated': 'ಕೊನೆಯದಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ',
         'groq_error': 'AI ಸಲಹೆ ಅಂದುಬಾಟುಲ್ಲೋ.',
         'home_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
         'in_location': 'ನಲ್ಲಿ',
-        'welcome_description': 'ಆಧುನಿಕ ಕೃಷಿಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ. ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ, ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ, AI-ಚಾಲಿತ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ ಮತ್ತು ನಿಜ-ಸಮಯದ ಹವಾಮಾನ ನವೀಕರಣಗಳೊಂದಿಗೆ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.',
+        'welcome_description': 'ಆಧుನಿಕ ಕೃಷಿಗಾಗಿ ನಿಮ್ಮ ಸಮಗ్ರ ಪರಿಹಾರ. ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ, ರೋಗಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ, AI-ಚಾಲಿತ ಸಲಹೆಗಳನ್ನು ಪಡೆಯಿರಿ ಮತ್ತು ನಿಜ-ಸಮಯದ ಹವಾಮಾನ ನವೀಕರಣಗಳೊಂದಿಗೆ ಮಾಹಿತಿ ಪಡೆಯಿರಿ.',
         'check_location_weather': 'ಸ್ಥಳ ಮತ್ತು ಹವಾಮಾನವನ್ನು ಪರಿಶೀಲಿಸಿ',
         'video_monitoring_title': 'ವೀಡಿಯೊ ಮೇಲ್ವಿಚಾರಣೆ',
-        'video_monitoring_description': 'ನೈವ್ ವೀಡಿಯೊ ಫೀಡ್‌గಳు ಮತ್ತು ಸ್ವಯಂಚಾಲಿತ ಅನಾಮಲಿ ಪತ್ತೆಹಚ್ಚುವಿಕೆಯೊಂದಿಗೆ ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯ ಮೇಲೆ ಗಮನವಿಡಿ.',
+        'video_monitoring_description': 'ನೈವ್ ವೀಡಿಯೊ ಫೀಡ್‌గಳు ಮತ్ತು ಸ್ವಯಂಚಾಲಿತ ಅನಾಮಲಿ ಪತ్ತೆಹಚ್ಚುವಿಕೆಯೊಂದಿಗೆ ನಿಮ್ಮ ಕೃಷಿ ಭೂಮಿಯ ಮೇಲೆ ಗಮನವಿಡಿ.',
         'view_feeds': 'ಫೀಡ್‌గಳನ್ನು ವೀಕ್ಷಿಸಿ',
-        'disease_pest_detection_title': 'ರೋಗ ಮತ್ತು ಕೀಟ ಪತ್ತೆ',
-        'disease_pest_detection_description': 'ವేಗವಾದ ಮತ್ತು ನಿಖರವಾದ ರೋಗ ಮತ್ತು ಕೀಟ ಗುರ్ತಿಸುವಿಕೆ ಮತ್ತು ಚಿಕಿತ್ಸೆ ಶಿಫಾರ్ಸుಗಳಿಗಾಗಿ ಸಸ್ಯ ಚಿತ್ರಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
+        'disease_pest_detection_title': 'ರೋಗ ಮತ్ತು ಕೀಟ ಪತ್ತೆ',
+        'disease_pest_detection_description': 'ವేಗವಾದ ಮತ్ತು ನಿಖರವಾದ ರೋಗ ಮತ్ತು ಕೀಟ ಗುರ్ತಿಸುವಿಕೆ ಮತ్ತು ಚಿಕಿತ್ಸೆ ಶಿಫాರ్ಸుಗಳಿಗಾಗಿ ಸಸ್ಯ ಚಿತ್ರಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.',
         'analyze_image': 'ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ',
         'dashboard_title': 'ಕೃಷಿ ಜಾಗೃತಿ ವ್ಯವಸ್ಥೆ',
         'back_to_dashboard': 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹಿಂತಿರುಗಿ'
@@ -610,7 +610,7 @@ def speech_to_text_route():
         src_lang = request.form.get('lang', g.lang)
         logger.info(f"Performing speech-to-text with source language: {src_lang}")
 
-        text_result = voice_handler.detect_and_translate(audio_bytes, src_lang, 'en') # Always translate to English for Groq input
+        text_result = voice_handler.speech_to_text(audio_bytes, src_lang)
         logger.info(f"Speech-to-text result (translated to English): {text_result}")
         return jsonify({'text': text_result})
     except Exception as e:
@@ -628,13 +628,13 @@ def text_to_speech_route():
         return jsonify({'error': 'No text provided'}), 400
 
     try:
-        audio_bytes = voice_handler.Text_to_audios(text, target_lang)
+        audio_bytes = voice_handler.text_to_speech(text, target_lang)
         if not audio_bytes:
-            raise ValueError("Text_to_audios returned no audio bytes.")
+            raise ValueError("text_to_speech returned no audio bytes.")
         
         audio_base64 = base64.b64encode(audio_bytes).decode('utf-8')
         logger.info(f"Generated text-to-speech audio with {len(audio_bytes)} bytes.")
-        return jsonify({'audio': audio_base64})
+        return jsonify({'audio_base64': audio_base64})
     except Exception as e:
         logger.error(f"Error in text-to-speech: {e}")
         return jsonify({'error': str(e)}), 500
@@ -665,16 +665,6 @@ def api_suggestions():
         suggestions_text = chat_completion.choices[0].message.content.strip()
         suggestions_list = [s.strip() for s in suggestions_text.split(',') if s.strip()]
         logger.info(f"Groq suggestions: {suggestions_list}")
-        
-        # Translate suggestions if needed
-        target_lang = g.lang
-        if target_lang != 'en' and voice_handler:
-            try:
-                translated_suggestions = [voice_handler.translate_text(s, 'en', target_lang) for s in suggestions_list]
-                return jsonify({'suggestions': translated_suggestions})
-            except Exception as e:
-                logger.error(f"Error translating suggestions: {e}")
-                return jsonify({'suggestions': suggestions_list}) # Return original if translation fails
         
         return jsonify({'suggestions': suggestions_list})
     except Exception as e:
@@ -716,16 +706,6 @@ def get_groq_advice(weather, location):
         advice = chat_completion.choices[0].message.content
         logger.info(f"Groq advice received: {advice}")
 
-        # Translate the Groq advice if the user's language is not English
-        target_lang = g.lang
-        if target_lang != 'en' and voice_handler:
-            try:
-                logger.info(f"Translating Groq advice from English to {target_lang}")
-                translated_advice = voice_handler.translate_text(advice, 'en', target_lang)
-                return translated_advice
-            except Exception as e:
-                logger.error(f"Error translating Groq advice: {e}")
-                return advice # Return original if translation fails
         return advice
     except Exception as e:
         logger.error(f"Error fetching Groq advice: {e}")
@@ -865,3 +845,4 @@ if __name__ == '__main__':
     finally:
         # The camera handler is now managed globally via atexit.register
         pass # Removed g-based cleanup
+
